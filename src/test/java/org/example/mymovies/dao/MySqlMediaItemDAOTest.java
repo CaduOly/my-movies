@@ -35,7 +35,7 @@ public class MySqlMediaItemDAOTest {
 
     @Test
     public void testInsertUsesPreparedStatement() throws Exception {
-        MediaItem item = new MediaItem("Inception", "A dream within a dream", "MOVIE", 2010);
+        MediaItem item = new MediaItem("Inception", "A dream within a dream", org.example.mymovies.model.MediaType.MOVIE, 2010);
         
         when(mockPreparedStatement.executeUpdate()).thenReturn(1);
         when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockResultSet);
@@ -56,6 +56,35 @@ public class MySqlMediaItemDAOTest {
         verify(mockPreparedStatement).setInt(4, 2010);
         
         assertEquals(1L, item.getId());
+    }
+
+    @Test
+    public void testInsertWithNullReleaseYear() throws Exception {
+        MediaItem item = new MediaItem("Old Movie", "No year", org.example.mymovies.model.MediaType.MOVIE, null);
+        
+        when(mockPreparedStatement.executeUpdate()).thenReturn(1);
+        when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockResultSet);
+        when(mockResultSet.next()).thenReturn(true);
+        when(mockResultSet.getLong(1)).thenReturn(2L);
+
+        dao.insert(item);
+        
+        verify(mockPreparedStatement).setNull(4, java.sql.Types.INTEGER);
+    }
+    
+    @Test
+    public void testMapRowHandlesNullReleaseYear() throws Exception {
+        when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
+        when(mockResultSet.next()).thenReturn(true, false);
+        when(mockResultSet.getObject("release_year")).thenReturn(null);
+        when(mockResultSet.getString("title")).thenReturn("Title");
+        when(mockResultSet.getString("description")).thenReturn("Desc");
+        when(mockResultSet.getString("media_type")).thenReturn("MOVIE");
+        when(mockResultSet.getLong("id")).thenReturn(1L);
+
+        java.util.List<MediaItem> results = dao.searchByTerm("Title");
+        assertEquals(1, results.size());
+        assertNull(results.get(0).getReleaseYear());
     }
     
     @Test

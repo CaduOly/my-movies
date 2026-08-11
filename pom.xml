@@ -15,6 +15,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.10.2</junit.version>
         <mockito.version>5.11.0</mockito.version>
+        <db.url>jdbc:mysql://localhost:3306/mymovies</db.url>
+        <db.user>root</db.user>
+        <db.password>root</db.password>
     </properties>
 
     <dependencies>
@@ -107,9 +110,9 @@
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>10.10.0</version>
                 <configuration>
-                    <url>jdbc:mysql://localhost:3306/mymovies</url>
-                    <user>root</user>
-                    <password>root</password>
+                    <url>${db.url}</url>
+                    <user>${db.user}</user>
+                    <password>${db.password}</password>
                 </configuration>
             </plugin>
         </plugins>
