@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: mymovies_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: mymovies
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - mymovies_net
+
+  app:
+    image: tomcat:10.1-jdk17
+    container_name: mymovies_app
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./target/my-movies-1.0-SNAPSHOT.war:/usr/local/tomcat/webapps/ROOT.war
+    depends_on:
+      - db
+    networks:
+      - mymovies_net
+
+networks:
+  mymovies_net:
+
+volumes:
+  db_data:
