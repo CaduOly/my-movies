@@ -4,13 +4,13 @@ public class MediaItem {
     private Long id;
     private String title;
     private String description;
-    private String type; // MOVIE, SERIES
+    private MediaType type;
     private Integer releaseYear;
 
     public MediaItem() {
     }
 
-    public MediaItem(String title, String description, String type, Integer releaseYear) {
+    public MediaItem(String title, String description, MediaType type, Integer releaseYear) {
         this.title = title;
         this.description = description;
         this.type = type;
@@ -41,11 +41,11 @@ public class MediaItem {
         this.description = description;
     }
 
-    public String getType() {
+    public MediaType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(MediaType type) {
         this.type = type;
     }
 
