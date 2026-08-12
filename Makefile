@@ -9,7 +9,10 @@ help:
 	@echo "  make clean   - Remove containers e volumes"
 
 build:
-	mvn clean package
+	mvn clean package -DskipTests
+
+test:
+	mvn test
 
 up: build
 	@echo "Iniciando Docker Compose..."
