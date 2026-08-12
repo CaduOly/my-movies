@@ -22,6 +22,12 @@ public class CatalogServlet extends HttpServlet {
     
     /**
      * Trata as requisições GET para exibir listagens e formulários.
+     * 
+     * @param req  O objeto HttpServletRequest que contém a requisição do cliente.
+     * @param resp O objeto HttpServletResponse que contém a resposta do servlet.
+     * @throws ServletException Se ocorrer um erro específico do servlet.
+     * @throws IOException      Se ocorrer um erro de I/O.
+     * @since 1.0
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -69,6 +75,12 @@ public class CatalogServlet extends HttpServlet {
 
     /**
      * Trata as requisições POST para salvar e excluir itens.
+     * 
+     * @param req  O objeto HttpServletRequest que contém a requisição do cliente.
+     * @param resp O objeto HttpServletResponse que contém a resposta do servlet.
+     * @throws ServletException Se ocorrer um erro específico do servlet.
+     * @throws IOException      Se ocorrer um erro de I/O.
+     * @since 1.0
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

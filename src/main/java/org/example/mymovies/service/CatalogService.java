@@ -34,6 +34,13 @@ public class CatalogService {
         return new MySqlMediaItemDAO(connection);
     }
 
+    /**
+     * Adiciona um novo item de mídia ao catálogo.
+     * 
+     * @param item O item de mídia a ser adicionado.
+     * @throws ServiceException Se houver erro de validação ou de persistência.
+     * @since 1.0
+     */
     public void addMediaItem(MediaItem item) throws ServiceException {
         Connection conn = null;
         try {
@@ -60,6 +67,13 @@ public class CatalogService {
         }
     }
 
+    /**
+     * Atualiza os dados de um item de mídia existente.
+     * 
+     * @param item O item de mídia contendo os dados atualizados.
+     * @throws ServiceException Se houver erro de validação ou de persistência.
+     * @since 1.0
+     */
     public void updateMediaItem(MediaItem item) throws ServiceException {
         Connection conn = null;
         try {
@@ -79,6 +93,13 @@ public class CatalogService {
         }
     }
 
+    /**
+     * Remove um item de mídia do catálogo pelo seu identificador.
+     * 
+     * @param id O identificador numérico do item.
+     * @throws ServiceException Se houver erro durante a exclusão.
+     * @since 1.0
+     */
     public void deleteMediaItem(Long id) throws ServiceException {
         Connection conn = null;
         try {
@@ -95,6 +116,14 @@ public class CatalogService {
         }
     }
 
+    /**
+     * Busca um item de mídia pelo seu identificador único.
+     * 
+     * @param id O identificador numérico do item.
+     * @return O item de mídia encontrado ou null.
+     * @throws ServiceException Se houver erro durante a busca.
+     * @since 1.0
+     */
     public MediaItem findById(Long id) throws ServiceException {
         try (Connection conn = getConnection()) {
             return getMediaItemDAO(conn).findById(id);
@@ -103,6 +132,13 @@ public class CatalogService {
         }
     }
 
+    /**
+     * Recupera todos os itens de mídia cadastrados.
+     * 
+     * @return Uma lista contendo todos os itens de mídia.
+     * @throws ServiceException Se houver erro durante a busca.
+     * @since 1.0
+     */
     public List<MediaItem> findAll() throws ServiceException {
         try (Connection conn = getConnection()) {
             return getMediaItemDAO(conn).findAll();
@@ -111,6 +147,14 @@ public class CatalogService {
         }
     }
 
+    /**
+     * Busca itens de mídia que correspondam a um termo específico.
+     * 
+     * @param term O termo de busca para filtrar os itens.
+     * @return Uma lista de itens que correspondem ao termo buscado.
+     * @throws ServiceException Se houver erro durante a busca.
+     * @since 1.0
+     */
     public List<MediaItem> searchByTerm(String term) throws ServiceException {
         try (Connection conn = getConnection()) {
             return getMediaItemDAO(conn).searchByTerm(term);

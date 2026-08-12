@@ -23,6 +23,13 @@ public class MySqlMediaItemDAO implements MediaItemDAO {
         this.connection = connection;
     }
 
+    /**
+     * Realiza a inserção de um item de mídia, recuperando seu ID gerado automaticamente.
+     *
+     * @param item A entidade contendo os dados a serem salvos (título é obrigatório).
+     * @throws DAOException Caso ocorra uma violação de restrição do SQL ou queda de conexão.
+     * @since 1.0
+     */
     @Override
     public void insert(MediaItem item) throws DAOException {
         String sql = "INSERT INTO item_media (title, synopsis, media_type, release_year, author_director, genre, poster_url, external_id, rating, comment) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -56,6 +63,14 @@ public class MySqlMediaItemDAO implements MediaItemDAO {
         }
     }
 
+    /**
+     * Busca os dados completos de uma mídia específica pelo identificador primário.
+     *
+     * @param id O identificador numérico persistido na base.
+     * @return A entidade preenchida caso encontrada, ou nulo se não existir registro.
+     * @throws DAOException Em caso de falha de conexão ou erro de sintaxe SQL.
+     * @since 1.0
+     */
     @Override
     public MediaItem findById(Long id) throws DAOException {
         String sql = "SELECT * FROM item_media WHERE id = ?";
@@ -72,6 +87,13 @@ public class MySqlMediaItemDAO implements MediaItemDAO {
         return null;
     }
 
+    /**
+     * Recupera a coleção inteira de mídias sem filtros.
+     *
+     * @return Lista contendo as mídias registradas, podendo estar vazia.
+     * @throws DAOException Caso a tabela não exista ou o banco rejeite a query.
+     * @since 1.0
+     */
     @Override
     public List<MediaItem> findAll() throws DAOException {
         String sql = "SELECT * FROM item_media";
@@ -87,6 +109,13 @@ public class MySqlMediaItemDAO implements MediaItemDAO {
         return result;
     }
 
+    /**
+     * Sobrescreve as informações de um registro previamente salvo.
+     *
+     * @param item A entidade com o ID existente e as propriedades atualizadas.
+     * @throws DAOException Se o registro não puder ser modificado devido a erros no driver.
+     * @since 1.0
+     */
     @Override
     public void update(MediaItem item) throws DAOException {
         String sql = "UPDATE item_media SET title = ?, synopsis = ?, media_type = ?, release_year = ?, author_director = ?, genre = ?, poster_url = ?, external_id = ?, rating = ?, comment = ? WHERE id = ?";
@@ -116,6 +145,13 @@ public class MySqlMediaItemDAO implements MediaItemDAO {
         }
     }
 
+    /**
+     * Remove definitivamente o registro de mídia associado à chave primária.
+     *
+     * @param id A chave primária (ID) a ser excluída.
+     * @throws DAOException Se o banco negar a deleção ou houver perda de conexão.
+     * @since 1.0
+     */
     @Override
     public void delete(Long id) throws DAOException {
         String sql = "DELETE FROM item_media WHERE id = ?";
@@ -127,6 +163,14 @@ public class MySqlMediaItemDAO implements MediaItemDAO {
         }
     }
 
+    /**
+     * Executa uma busca não sensível a maiúsculas baseada no título ou autor/diretor.
+     *
+     * @param term O pedaço de texto para corresponder nos registros (LIKE %term%).
+     * @return Lista de mídias que satisfazem o critério textual.
+     * @throws DAOException Se ocorrer alguma limitação do banco ao executar a pesquisa.
+     * @since 1.0
+     */
     @Override
     public List<MediaItem> searchByTerm(String term) throws DAOException {
         String sql = "SELECT * FROM item_media WHERE LOWER(title) LIKE LOWER(?) OR LOWER(author_director) LIKE LOWER(?)";

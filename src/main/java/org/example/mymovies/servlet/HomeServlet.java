@@ -18,6 +18,12 @@ public class HomeServlet extends HttpServlet {
     
     /**
      * Trata a requisição GET, carregando a lista e encaminhando para a view.
+     * 
+     * @param req  O objeto HttpServletRequest que contém a requisição do cliente.
+     * @param resp O objeto HttpServletResponse que contém a resposta do servlet.
+     * @throws ServletException Se ocorrer um erro específico do servlet.
+     * @throws IOException      Se ocorrer um erro de I/O.
+     * @since 1.0
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

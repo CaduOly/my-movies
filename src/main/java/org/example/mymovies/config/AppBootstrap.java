@@ -19,6 +19,9 @@ public class AppBootstrap implements ServletContextListener {
      * 
      * Como o provedor de metadados será implementado posteriormente, 
      * passamos null por enquanto (Inversão de Dependência).
+     * 
+     * @param sce O evento de inicialização do contexto do servlet.
+     * @since 1.0
      */
     @Override
     public void contextInitialized(ServletContextEvent sce) {
