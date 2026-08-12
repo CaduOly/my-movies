@@ -11,6 +11,7 @@ import org.example.mymovies.validator.MediaItemValidator;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 public class CatalogService {
     private MediaItemValidator validator;
@@ -21,12 +22,10 @@ public class CatalogService {
         this.metadataProvider = metadataProvider;
     }
 
-    // Protected for testing
     protected Connection getConnection() throws SQLException {
         return ConnectionFactory.getConnection();
     }
 
-    // Protected for testing
     protected MediaItemDAO getMediaItemDAO(Connection connection) {
         return new MySqlMediaItemDAO(connection);
     }
@@ -35,7 +34,6 @@ public class CatalogService {
         Connection conn = null;
         try {
             validator.validate(item);
-            
             if (metadataProvider != null) {
                 String desc = metadataProvider.fetchMetadata(item.getTitle());
                 if (desc != null && !desc.isEmpty()) {
@@ -45,30 +43,95 @@ public class CatalogService {
 
             conn = getConnection();
             conn.setAutoCommit(false);
-            
             MediaItemDAO dao = getMediaItemDAO(conn);
             dao.insert(item);
-            
             conn.commit();
         } catch (ValidationException e) {
             throw new ServiceException("Validation failed: " + e.getMessage(), e);
         } catch (Exception e) {
-            if (conn != null) {
-                try {
-                    conn.rollback();
-                } catch (SQLException ex) {
-                    // Ignore
-                }
-            }
+            rollbackQuietly(conn);
             throw new ServiceException("Failed to add media item", e);
         } finally {
-            if (conn != null) {
-                try {
-                    conn.setAutoCommit(true);
-                    conn.close();
-                } catch (SQLException ex) {
-                    // Ignore
-                }
+            closeQuietly(conn);
+        }
+    }
+
+    public void updateMediaItem(MediaItem item) throws ServiceException {
+        Connection conn = null;
+        try {
+            validator.validate(item);
+            conn = getConnection();
+            conn.setAutoCommit(false);
+            MediaItemDAO dao = getMediaItemDAO(conn);
+            dao.update(item);
+            conn.commit();
+        } catch (ValidationException e) {
+            throw new ServiceException("Validation failed: " + e.getMessage(), e);
+        } catch (Exception e) {
+            rollbackQuietly(conn);
+            throw new ServiceException("Failed to update media item", e);
+        } finally {
+            closeQuietly(conn);
+        }
+    }
+
+    public void deleteMediaItem(Long id) throws ServiceException {
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            conn.setAutoCommit(false);
+            MediaItemDAO dao = getMediaItemDAO(conn);
+            dao.delete(id);
+            conn.commit();
+        } catch (Exception e) {
+            rollbackQuietly(conn);
+            throw new ServiceException("Failed to delete media item", e);
+        } finally {
+            closeQuietly(conn);
+        }
+    }
+
+    public MediaItem findById(Long id) throws ServiceException {
+        try (Connection conn = getConnection()) {
+            return getMediaItemDAO(conn).findById(id);
+        } catch (Exception e) {
+            throw new ServiceException("Failed to find media item by id", e);
+        }
+    }
+
+    public List<MediaItem> findAll() throws ServiceException {
+        try (Connection conn = getConnection()) {
+            return getMediaItemDAO(conn).findAll();
+        } catch (Exception e) {
+            throw new ServiceException("Failed to find all media items", e);
+        }
+    }
+
+    public List<MediaItem> searchByTerm(String term) throws ServiceException {
+        try (Connection conn = getConnection()) {
+            return getMediaItemDAO(conn).searchByTerm(term);
+        } catch (Exception e) {
+            throw new ServiceException("Failed to search media items", e);
+        }
+    }
+
+    private void rollbackQuietly(Connection conn) {
+        if (conn != null) {
+            try {
+                conn.rollback();
+            } catch (SQLException ex) {
+                // Ignore
+            }
+        }
+    }
+
+    private void closeQuietly(Connection conn) {
+        if (conn != null) {
+            try {
+                conn.setAutoCommit(true);
+                conn.close();
+            } catch (SQLException ex) {
+                // Ignore
             }
         }
     }
