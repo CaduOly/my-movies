@@ -35,7 +35,7 @@ public class MySqlMediaItemDAOTest {
 
     @Test
     public void testInsertUsesPreparedStatement() throws Exception {
-        MediaItem item = new MediaItem("Inception", "A dream within a dream", org.example.mymovies.model.MediaType.MOVIE, 2010);
+        MediaItem item = new MediaItem("Inception", "A dream within a dream", org.example.mymovies.model.MediaType.MOVIE, 2010, "Christopher Nolan", "Sci-Fi");
         
         when(mockPreparedStatement.executeUpdate()).thenReturn(1);
         when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockResultSet);
@@ -54,13 +54,15 @@ public class MySqlMediaItemDAOTest {
         verify(mockPreparedStatement).setString(2, "A dream within a dream");
         verify(mockPreparedStatement).setString(3, "MOVIE");
         verify(mockPreparedStatement).setInt(4, 2010);
+        verify(mockPreparedStatement).setString(5, "Christopher Nolan");
+        verify(mockPreparedStatement).setString(6, "Sci-Fi");
         
         assertEquals(1L, item.getId());
     }
 
     @Test
     public void testInsertWithNullReleaseYear() throws Exception {
-        MediaItem item = new MediaItem("Old Movie", "No year", org.example.mymovies.model.MediaType.MOVIE, null);
+        MediaItem item = new MediaItem("Old Movie", "No year", org.example.mymovies.model.MediaType.MOVIE, null, "Unknown", "Classic");
         
         when(mockPreparedStatement.executeUpdate()).thenReturn(1);
         when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockResultSet);
@@ -78,8 +80,10 @@ public class MySqlMediaItemDAOTest {
         when(mockResultSet.next()).thenReturn(true, false);
         when(mockResultSet.getObject("release_year")).thenReturn(null);
         when(mockResultSet.getString("title")).thenReturn("Title");
-        when(mockResultSet.getString("description")).thenReturn("Desc");
+        when(mockResultSet.getString("synopsis")).thenReturn("Desc");
         when(mockResultSet.getString("media_type")).thenReturn("MOVIE");
+        when(mockResultSet.getString("author_director")).thenReturn("Author");
+        when(mockResultSet.getString("genre")).thenReturn("Genre");
         when(mockResultSet.getLong("id")).thenReturn(1L);
 
         java.util.List<MediaItem> results = dao.searchByTerm("Title");
@@ -101,5 +105,6 @@ public class MySqlMediaItemDAOTest {
         assertTrue(sql.contains("?"), "SQL must use placeholders (?) to prevent SQL injection");
 
         verify(mockPreparedStatement).setString(1, "%dream%");
+        verify(mockPreparedStatement).setString(2, "%dream%");
     }
 }
