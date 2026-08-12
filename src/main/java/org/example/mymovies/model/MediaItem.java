@@ -1,5 +1,9 @@
 package org.example.mymovies.model;
 
+/**
+ * Classe de modelo que representa um item de mídia no catálogo.
+ * Pode ser um livro, filme ou série, contendo informações básicas.
+ */
 public class MediaItem {
     private Long id;
     private String title;

@@ -6,19 +6,27 @@ import jakarta.servlet.annotation.WebListener;
 import org.example.mymovies.service.CatalogService;
 import org.example.mymovies.validator.MediaItemValidator;
 
+/**
+ * Classe responsável por inicializar componentes e dependências no momento 
+ * em que a aplicação web é iniciada.
+ */
 @WebListener
 public class AppBootstrap implements ServletContextListener {
 
+    /**
+     * Método chamado quando o contexto do servlet é inicializado.
+     * Instancia as dependências e as armazena no contexto.
+     * 
+     * Como o provedor de metadados será implementado posteriormente, 
+     * passamos null por enquanto (Inversão de Dependência).
+     */
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         System.out.println("Initializing AppBootstrap...");
 
-        // Create dependencies
         MediaItemValidator validator = new MediaItemValidator();
-        // Since MovieMetadataProvider is implemented in Task 4, we pass null for now (DIP)
         CatalogService catalogService = new CatalogService(validator, null);
 
-        // Put the service in the ServletContext so Servlets can access it
         sce.getServletContext().setAttribute("catalogService", catalogService);
         
         System.out.println("AppBootstrap initialized successfully.");

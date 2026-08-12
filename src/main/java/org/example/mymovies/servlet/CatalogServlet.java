@@ -13,8 +13,16 @@ import org.example.mymovies.service.CatalogService;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Servlet responsável por gerenciar as requisições relacionadas ao catálogo de mídias.
+ * Trata as operações de listagem, inclusão, edição, exclusão e busca.
+ */
 @WebServlet(urlPatterns = {"/items"})
 public class CatalogServlet extends HttpServlet {
+    
+    /**
+     * Trata as requisições GET para exibir listagens e formulários.
+     */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
@@ -59,6 +67,9 @@ public class CatalogServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Trata as requisições POST para salvar e excluir itens.
+     */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");

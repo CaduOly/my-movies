@@ -13,6 +13,10 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * Serviço responsável por orquestrar as regras de negócio 
+ * relacionadas ao catálogo de mídias (filmes, séries, livros).
+ */
 public class CatalogService {
     private MediaItemValidator validator;
     private MovieMetadataProvider metadataProvider;
@@ -120,7 +124,7 @@ public class CatalogService {
             try {
                 conn.rollback();
             } catch (SQLException ex) {
-                // Ignore
+                /** Ignore - nenhuma ação necessária caso o rollback falhe silenciosamente */
             }
         }
     }
@@ -131,7 +135,7 @@ public class CatalogService {
                 conn.setAutoCommit(true);
                 conn.close();
             } catch (SQLException ex) {
-                // Ignore
+                /** Ignore - nenhuma ação necessária caso o fechamento falhe silenciosamente */
             }
         }
     }

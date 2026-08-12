@@ -5,6 +5,10 @@ import java.util.List;
 
 import org.example.mymovies.exception.DAOException;
 
+/**
+ * Interface que define o contrato para acesso a dados (DAO) da entidade MediaItem.
+ * Contém operações básicas de CRUD e busca.
+ */
 public interface MediaItemDAO {
     void insert(MediaItem item) throws DAOException;
     MediaItem findById(Long id) throws DAOException;

@@ -12,6 +12,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 
+/**
+ * Implementação de acesso a dados (DAO) para itens de mídia utilizando MySQL.
+ * Realiza as operações de CRUD através de conexões JDBC diretas.
+ */
 public class MySqlMediaItemDAO implements MediaItemDAO {
     private final Connection connection;
 

@@ -9,8 +9,16 @@ import org.example.mymovies.service.CatalogService;
 
 import java.io.IOException;
 
+/**
+ * Servlet responsável por exibir a página inicial da aplicação.
+ * Carrega a lista de itens do catálogo e a disponibiliza para a view.
+ */
 @WebServlet(urlPatterns = {"/home", ""})
 public class HomeServlet extends HttpServlet {
+    
+    /**
+     * Trata a requisição GET, carregando a lista e encaminhando para a view.
+     */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         CatalogService catalogService = (CatalogService) getServletContext().getAttribute("catalogService");

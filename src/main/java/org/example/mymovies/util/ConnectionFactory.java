@@ -4,6 +4,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * Fábrica de conexões para o banco de dados da aplicação.
+ * Fornece conexões JDBC configuradas através de variáveis de ambiente ou valores padrão.
+ */
 public class ConnectionFactory {
     public static Connection getConnection() throws SQLException {
         try {
