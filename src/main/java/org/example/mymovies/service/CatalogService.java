@@ -41,7 +41,7 @@ public class CatalogService {
             if (metadataProvider != null) {
                 String desc = metadataProvider.fetchMetadata(item.getTitle());
                 if (desc != null && !desc.isEmpty()) {
-                    item.setDescription(desc);
+                    item.setSynopsis(desc);
                 }
             }
 

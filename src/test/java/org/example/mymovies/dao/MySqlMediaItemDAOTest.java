@@ -80,7 +80,7 @@ public class MySqlMediaItemDAOTest {
         when(mockResultSet.next()).thenReturn(true, false);
         when(mockResultSet.getObject("release_year")).thenReturn(null);
         when(mockResultSet.getString("title")).thenReturn("Title");
-        when(mockResultSet.getString("description")).thenReturn("Desc");
+        when(mockResultSet.getString("synopsis")).thenReturn("Desc");
         when(mockResultSet.getString("media_type")).thenReturn("MOVIE");
         when(mockResultSet.getString("author_director")).thenReturn("Author");
         when(mockResultSet.getString("genre")).thenReturn("Genre");

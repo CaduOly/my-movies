@@ -56,7 +56,7 @@ public class CatalogServiceTest {
         verify(connection).setAutoCommit(false);
         verify(mediaItemDAO).insert(item);
         verify(connection).commit();
-        assertEquals("Great movie", item.getDescription());
+        assertEquals("Great movie", item.getSynopsis());
     }
 
     @Test

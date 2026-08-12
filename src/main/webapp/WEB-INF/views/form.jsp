@@ -49,8 +49,8 @@
     </div>
 
     <div class="mb-3">
-        <label for="description" class="form-label"><fmt:message key="label.description" /></label>
-        <textarea class="form-control bg-dark text-light border-secondary" id="description" name="description" rows="5"><c:out value="${item.description}" /></textarea>
+        <label for="synopsis" class="form-label"><fmt:message key="label.synopsis" /></label>
+        <textarea class="form-control bg-dark text-light border-secondary" id="synopsis" name="synopsis" rows="5"><c:out value="${item.synopsis}" /></textarea>
     </div>
 
     <button type="submit" class="btn btn-primary"><fmt:message key="action.save" /></button>

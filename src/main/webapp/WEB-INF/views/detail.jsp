@@ -10,8 +10,8 @@
         <h5 class="card-subtitle mb-3 text-muted"><c:out value="${item.type}" /> &bull; <c:out value="${item.releaseYear}" /> &bull; <c:out value="${item.genre}" /></h5>
         <h6 class="card-subtitle mb-3 text-muted"><fmt:message key="label.author" />: <c:out value="${item.authorDirector}" /></h6>
         
-        <h4><fmt:message key="label.description" /></h4>
-        <p class="card-text" style="white-space: pre-wrap;"><c:out value="${item.description}" /></p>
+        <h4><fmt:message key="label.synopsis" /></h4>
+        <p class="card-text" style="white-space: pre-wrap;"><c:out value="${item.synopsis}" /></p>
 
         <a href="${pageContext.request.contextPath}/items?action=manage" class="btn btn-secondary mt-3">Back to Manage</a>
         <a href="${pageContext.request.contextPath}/home" class="btn btn-secondary mt-3">Back to Home</a>

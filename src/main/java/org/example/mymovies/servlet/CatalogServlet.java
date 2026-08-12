@@ -83,7 +83,7 @@ public class CatalogServlet extends HttpServlet {
             } else if ("save".equals(action)) {
                 String idStr = req.getParameter("id");
                 String title = req.getParameter("title");
-                String description = req.getParameter("description");
+                String synopsis = req.getParameter("synopsis");
                 String typeStr = req.getParameter("type");
                 String releaseYearStr = req.getParameter("releaseYear");
                 String authorDirector = req.getParameter("authorDirector");
@@ -94,7 +94,7 @@ public class CatalogServlet extends HttpServlet {
                     item.setId(Long.parseLong(idStr));
                 }
                 item.setTitle(title);
-                item.setDescription(description);
+                item.setSynopsis(synopsis);
                 item.setAuthorDirector(authorDirector);
                 item.setGenre(genre);
                 if (typeStr != null && !typeStr.isEmpty()) {

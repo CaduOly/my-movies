@@ -25,10 +25,10 @@ public class MySqlMediaItemDAO implements MediaItemDAO {
 
     @Override
     public void insert(MediaItem item) throws DAOException {
-        String sql = "INSERT INTO item_media (title, description, media_type, release_year, author_director, genre) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO item_media (title, synopsis, media_type, release_year, author_director, genre, poster_url, external_id, rating, comment) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, item.getTitle());
-            stmt.setString(2, item.getDescription());
+            stmt.setString(2, item.getSynopsis());
             stmt.setString(3, item.getType() != null ? item.getType().name() : null);
             if (item.getReleaseYear() != null) {
                 stmt.setInt(4, item.getReleaseYear());
@@ -37,6 +37,14 @@ public class MySqlMediaItemDAO implements MediaItemDAO {
             }
             stmt.setString(5, item.getAuthorDirector());
             stmt.setString(6, item.getGenre());
+            stmt.setString(7, item.getPosterUrl());
+            stmt.setString(8, item.getExternalId());
+            if (item.getRating() != null) {
+                stmt.setInt(9, item.getRating());
+            } else {
+                stmt.setNull(9, Types.INTEGER);
+            }
+            stmt.setString(10, item.getComment());
             stmt.executeUpdate();
             try (ResultSet rs = stmt.getGeneratedKeys()) {
                 if (rs.next()) {
@@ -81,10 +89,10 @@ public class MySqlMediaItemDAO implements MediaItemDAO {
 
     @Override
     public void update(MediaItem item) throws DAOException {
-        String sql = "UPDATE item_media SET title = ?, description = ?, media_type = ?, release_year = ?, author_director = ?, genre = ? WHERE id = ?";
+        String sql = "UPDATE item_media SET title = ?, synopsis = ?, media_type = ?, release_year = ?, author_director = ?, genre = ?, poster_url = ?, external_id = ?, rating = ?, comment = ? WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, item.getTitle());
-            stmt.setString(2, item.getDescription());
+            stmt.setString(2, item.getSynopsis());
             stmt.setString(3, item.getType() != null ? item.getType().name() : null);
             if (item.getReleaseYear() != null) {
                 stmt.setInt(4, item.getReleaseYear());
@@ -93,7 +101,15 @@ public class MySqlMediaItemDAO implements MediaItemDAO {
             }
             stmt.setString(5, item.getAuthorDirector());
             stmt.setString(6, item.getGenre());
-            stmt.setLong(7, item.getId());
+            stmt.setString(7, item.getPosterUrl());
+            stmt.setString(8, item.getExternalId());
+            if (item.getRating() != null) {
+                stmt.setInt(9, item.getRating());
+            } else {
+                stmt.setNull(9, Types.INTEGER);
+            }
+            stmt.setString(10, item.getComment());
+            stmt.setLong(11, item.getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new DAOException("Error updating media item", e);
@@ -135,13 +151,17 @@ public class MySqlMediaItemDAO implements MediaItemDAO {
         MediaType type = typeStr != null ? MediaType.valueOf(typeStr) : null;
         MediaItem item = new MediaItem(
             rs.getString("title"),
-            rs.getString("description"),
+            rs.getString("synopsis"),
             type,
             releaseYear,
             rs.getString("author_director"),
             rs.getString("genre")
         );
         item.setId(rs.getLong("id"));
+        item.setPosterUrl(rs.getString("poster_url"));
+        item.setExternalId(rs.getString("external_id"));
+        item.setRating((Integer) rs.getObject("rating"));
+        item.setComment(rs.getString("comment"));
         return item;
     }
 }
