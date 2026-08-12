@@ -21,7 +21,7 @@ public class MySqlMediaItemDAO implements MediaItemDAO {
 
     @Override
     public void insert(MediaItem item) throws DAOException {
-        String sql = "INSERT INTO item_media (title, description, media_type, release_year) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO item_media (title, description, media_type, release_year, author_director, genre) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, item.getTitle());
             stmt.setString(2, item.getDescription());
@@ -31,6 +31,8 @@ public class MySqlMediaItemDAO implements MediaItemDAO {
             } else {
                 stmt.setNull(4, Types.INTEGER);
             }
+            stmt.setString(5, item.getAuthorDirector());
+            stmt.setString(6, item.getGenre());
             stmt.executeUpdate();
             try (ResultSet rs = stmt.getGeneratedKeys()) {
                 if (rs.next()) {
@@ -75,7 +77,7 @@ public class MySqlMediaItemDAO implements MediaItemDAO {
 
     @Override
     public void update(MediaItem item) throws DAOException {
-        String sql = "UPDATE item_media SET title = ?, description = ?, media_type = ?, release_year = ? WHERE id = ?";
+        String sql = "UPDATE item_media SET title = ?, description = ?, media_type = ?, release_year = ?, author_director = ?, genre = ? WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, item.getTitle());
             stmt.setString(2, item.getDescription());
@@ -85,7 +87,9 @@ public class MySqlMediaItemDAO implements MediaItemDAO {
             } else {
                 stmt.setNull(4, Types.INTEGER);
             }
-            stmt.setLong(5, item.getId());
+            stmt.setString(5, item.getAuthorDirector());
+            stmt.setString(6, item.getGenre());
+            stmt.setLong(7, item.getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new DAOException("Error updating media item", e);
@@ -105,10 +109,11 @@ public class MySqlMediaItemDAO implements MediaItemDAO {
 
     @Override
     public List<MediaItem> searchByTerm(String term) throws DAOException {
-        String sql = "SELECT * FROM item_media WHERE LOWER(title) LIKE LOWER(?)";
+        String sql = "SELECT * FROM item_media WHERE LOWER(title) LIKE LOWER(?) OR LOWER(author_director) LIKE LOWER(?)";
         List<MediaItem> result = new ArrayList<>();
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, "%" + term + "%");
+            stmt.setString(2, "%" + term + "%");
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     result.add(mapRowToMediaItem(rs));
@@ -128,7 +133,9 @@ public class MySqlMediaItemDAO implements MediaItemDAO {
             rs.getString("title"),
             rs.getString("description"),
             type,
-            releaseYear
+            releaseYear,
+            rs.getString("author_director"),
+            rs.getString("genre")
         );
         item.setId(rs.getLong("id"));
         return item;

@@ -47,7 +47,7 @@ public class CatalogServiceTest {
 
     @Test
     public void testAddMediaItemSuccess() throws Exception {
-        MediaItem item = new MediaItem("The Matrix", "Sci-fi", org.example.mymovies.model.MediaType.MOVIE, 1999);
+        MediaItem item = new MediaItem("The Matrix", "Sci-fi", org.example.mymovies.model.MediaType.MOVIE, 1999, "Wachowskis", "Sci-Fi");
         when(metadataProvider.fetchMetadata("The Matrix")).thenReturn("Great movie");
         
         catalogService.addMediaItem(item);
@@ -61,7 +61,7 @@ public class CatalogServiceTest {
 
     @Test
     public void testAddMediaItemValidationFailure() throws Exception {
-        MediaItem item = new MediaItem("", "", org.example.mymovies.model.MediaType.MOVIE, 1999);
+        MediaItem item = new MediaItem("", "", org.example.mymovies.model.MediaType.MOVIE, 1999, "", "");
         doThrow(new ValidationException("Invalid title")).when(validator).validate(item);
         
         assertThrows(ServiceException.class, () -> catalogService.addMediaItem(item));
@@ -72,7 +72,7 @@ public class CatalogServiceTest {
 
     @Test
     public void testAddMediaItemDAOExceptionTriggersRollback() throws Exception {
-        MediaItem item = new MediaItem("The Matrix", "Sci-fi", org.example.mymovies.model.MediaType.MOVIE, 1999);
+        MediaItem item = new MediaItem("The Matrix", "Sci-fi", org.example.mymovies.model.MediaType.MOVIE, 1999, "Wachowskis", "Sci-Fi");
         doThrow(new DAOException("DB error", new RuntimeException())).when(mediaItemDAO).insert(item);
         
         assertThrows(ServiceException.class, () -> catalogService.addMediaItem(item));
