@@ -3,14 +3,37 @@ package com.seu.catalog.dao;
 import com.seu.catalog.model.MediaItem;
 import com.seu.catalog.model.MediaType;
 import org.junit.jupiter.api.*;
+import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.flywaydb.core.Flyway;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Testes de integração do DAO contra banco real.
  * Usa banco de teste (Flyway migra schema de teste antes dos testes).
  */
+@Testcontainers
 @DisplayName("MySqlMediaItemDAO Integration Tests")
 class MySqlMediaItemDAOTest {
+    
+    @Container
+    private static final MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0")
+            .withDatabaseName("my_movies")
+            .withUsername("app")
+            .withPassword("app123");
+
+    @BeforeAll
+    static void initDb() {
+        com.seu.catalog.infra.ConnectionFactory.setForTests(
+                mysql.getJdbcUrl(), mysql.getUsername(), mysql.getPassword());
+        
+        Flyway.configure()
+                .dataSource(mysql.getJdbcUrl(), mysql.getUsername(), mysql.getPassword())
+                .load()
+                .migrate();
+    }
     
     private MediaItemDAO dao;
 

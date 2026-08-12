@@ -10,17 +10,23 @@ import java.sql.SQLException;
  */
 public class ConnectionFactory {
     
-    private static final String JDBC_URL = System.getenv("JDBC_URL") != null 
+    private static String jdbcUrl = System.getenv("JDBC_URL") != null 
         ? System.getenv("JDBC_URL")
         : "jdbc:mysql://localhost:3306/my_movies?useUnicode=true&characterEncoding=UTF-8";
     
-    private static final String JDBC_USER = System.getenv("JDBC_USER") != null
+    private static String jdbcUser = System.getenv("JDBC_USER") != null
         ? System.getenv("JDBC_USER")
         : "app";
     
-    private static final String JDBC_PASSWORD = System.getenv("JDBC_PASSWORD") != null
+    private static String jdbcPassword = System.getenv("JDBC_PASSWORD") != null
         ? System.getenv("JDBC_PASSWORD")
         : "app123";
+        
+    public static void setForTests(String url, String user, String pass) {
+        jdbcUrl = url;
+        jdbcUser = user;
+        jdbcPassword = pass;
+    }
 
     static {
         try {
@@ -37,6 +43,6 @@ public class ConnectionFactory {
      * @throws SQLException se não conseguir conectar
      */
     public static Connection get() throws SQLException {
-        return DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
+        return DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcPassword);
     }
 }
