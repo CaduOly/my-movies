@@ -1,33 +1,40 @@
-version: '3.8'
+version: '3.9'
 
 services:
   db:
-    image: mysql:8.0
-    container_name: mymovies_db
+    image: mysql:8.0.34
+    container_name: my-movies-db
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: mymovies
+      MYSQL_DATABASE: my_movies
+      MYSQL_USER: app
+      MYSQL_PASSWORD: app123
     ports:
       - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
     volumes:
-      - db_data:/var/lib/mysql
-    networks:
-      - mymovies_net
+      - db_volume:/var/lib/mysql
 
   app:
-    image: tomcat:10.1-jdk17
-    container_name: mymovies_app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: my-movies-app
+    environment:
+      JDBC_URL: jdbc:mysql://db:3306/my_movies?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true
+      JDBC_USER: app
+      JDBC_PASSWORD: app123
     ports:
       - "8080:8080"
-    volumes:
-      - ./target/my-movies-1.0-SNAPSHOT.war:/usr/local/tomcat/webapps/ROOT.war
     depends_on:
-      - db
-    networks:
-      - mymovies_net
-
-networks:
-  mymovies_net:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./target/my-movies-1.0.0.war:/usr/local/tomcat/webapps/ROOT.war
 
 volumes:
-  db_data:
+  db_volume:
