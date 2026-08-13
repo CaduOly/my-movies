@@ -7,10 +7,7 @@
     <h2><fmt:message key="app.list" /></h2>
 
     <!-- Busca -->
-    <form method="GET" action="<c:url value='/app/search' />" class="search-form">
-        <input type="text" name="term" placeholder="<fmt:message key='app.search.placeholder' />" />
-        <button type="submit"><fmt:message key="app.search" /></button>
-    </form>
+    <jsp:include page="_search-bar.jsp" />
 
     <!-- Tabela de Itens -->
     <jsp:include page="_items-table.jsp" />

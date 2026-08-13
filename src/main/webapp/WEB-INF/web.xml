@@ -9,4 +9,9 @@
         <param-value>messages</param-value>
     </context-param>
 
+    <error-page>
+        <error-code>404</error-code>
+        <location>/WEB-INF/jsp/404.jsp</location>
+    </error-page>
+
 </web-app>
