@@ -33,8 +33,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    volumes:
-      - ./target/my-movies-1.0.0.war:/usr/local/tomcat/webapps/ROOT.war
 
 volumes:
   db_volume:

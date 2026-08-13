@@ -1,8 +1,7 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ tag language="java" pageEncoding="UTF-8" %>
+<%@ attribute name="pageTitle" required="true" type="java.lang.String" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
-
-<!DOCTYPE html>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %><!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8" />

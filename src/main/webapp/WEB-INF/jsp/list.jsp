@@ -1,10 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<c:import url="layout.jsp">
-    <jsp:param name="pageTitle" value="Biblioteca" />
-    
+<t:layout pageTitle="Biblioteca">
     <h2><fmt:message key="app.list" /></h2>
 
     <!-- Busca -->
@@ -54,4 +53,4 @@
             </table>
         </c:otherwise>
     </c:choose>
-</c:import>
+</t:layout>

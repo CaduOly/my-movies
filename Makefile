@@ -16,7 +16,7 @@ test:
 
 start: build
 	@echo "Iniciando Docker Compose..."
-	docker compose up -d
+	docker compose up -d --build
 	@echo "Aguardando app estar pronto..."
 	@sleep 5
 	@echo ""

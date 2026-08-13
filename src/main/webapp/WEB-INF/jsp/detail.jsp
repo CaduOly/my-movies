@@ -1,10 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<c:import url="layout.jsp">
-    <jsp:param name="pageTitle" value="${item.title}" />
-    
+<t:layout pageTitle="${item.title}">
     <div class="detail-header">
         <h2><c:out value="${item.title}" /></h2>
         <a href="<c:url value='/app/edit?id=${item.id}' />" class="btn btn-secondary">
@@ -42,4 +41,4 @@
             <fmt:message key="app.back" />
         </a>
     </div>
-</c:import>
+</t:layout>

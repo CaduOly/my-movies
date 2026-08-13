@@ -1,10 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<c:import url="layout.jsp">
-    <jsp:param name="pageTitle" value="Resultados da Busca" />
-    
+<t:layout pageTitle="Resultados da Busca">
     <h2>Resultados da Busca</h2>
     <p><fmt:message key="app.search" />: <c:out value="${searchTerm}" /></p>
 
@@ -21,4 +20,4 @@
     <a href="<c:url value='/app/list' />" class="btn btn-secondary">
         <fmt:message key="app.back" />
     </a>
-</c:import>
+</t:layout>

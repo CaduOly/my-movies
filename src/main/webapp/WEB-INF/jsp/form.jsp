@@ -1,10 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<c:import url="layout.jsp">
-    <jsp:param name="pageTitle" value="${isEdit ? 'Editar Mídia' : 'Novo Item'}" />
-    
+<t:layout pageTitle="${isEdit ? 'Editar Mídia' : 'Novo Item'}">
     <h2><c:out value="${isEdit ? 'Editar Mídia' : 'Novo Item'}" /></h2>
 
     <form method="POST" action="<c:url value='${isEdit ? \"/app/update\" : \"/app/save\"}' />" class="item-form">
@@ -73,4 +72,4 @@
             </a>
         </div>
     </form>
-</c:import>
+</t:layout>
