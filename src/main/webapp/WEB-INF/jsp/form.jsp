@@ -137,7 +137,7 @@ function acceptSuggestion(index) {
     if (selected.authorDirector) document.getElementById("authorDirector").value = selected.authorDirector;
     if (selected.synopsis) document.getElementById("synopsis").value = selected.synopsis;
     if (selected.posterUrl) document.getElementById("posterUrl").value = selected.posterUrl;
-    document.getElementById("mediaType").value = "MOVIE";
+    document.getElementById("mediaType").value = selected.mediaType || "MOVIE";
     
     document.getElementById("tmdbDropdown").style.display = "none";
 }

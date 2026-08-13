@@ -41,7 +41,7 @@ public class TmdbMetadataProvider implements MovieMetadataProvider {
 
         try {
             String encodedTerm = URLEncoder.encode(term, "UTF-8");
-            String urlStr = BASE_URL + "/search/movie?query=" + encodedTerm + "&language=pt-BR";
+            String urlStr = BASE_URL + "/search/multi?query=" + encodedTerm + "&language=pt-BR";
             
             if (!API_KEY.startsWith("eyJ")) {
                 urlStr += "&api_key=" + API_KEY;
@@ -51,13 +51,18 @@ public class TmdbMetadataProvider implements MovieMetadataProvider {
             
             if (response != null && response.has("results")) {
                 JSONArray results = response.getJSONArray("results");
-                int count = Math.min(results.length(), 6);
-                for (int i = 0; i < count; i++) {
+                int count = 0;
+                for (int i = 0; i < results.length() && count < 6; i++) {
                     JSONObject res = results.getJSONObject(i);
+                    String mediaType = res.optString("media_type", "movie");
+                    if ("person".equals(mediaType)) continue;
+                    
                     int tmdbId = res.getInt("id");
-                    MediaItem item = findById(String.valueOf(tmdbId));
+                    String externalId = mediaType + "-" + tmdbId;
+                    MediaItem item = findById(externalId);
                     if (item != null) {
                         items.add(item);
+                        count++;
                     }
                 }
             }
@@ -72,8 +77,12 @@ public class TmdbMetadataProvider implements MovieMetadataProvider {
     public MediaItem findById(String externalId) {
         if (API_KEY == null || API_KEY.trim().isEmpty()) return null;
 
+        String[] parts = externalId.split("-", 2);
+        String type = parts.length > 1 ? parts[0] : "movie";
+        String id = parts.length > 1 ? parts[1] : externalId;
+
         try {
-            String urlStr = BASE_URL + "/movie/" + externalId + "?language=pt-BR&append_to_response=credits";
+            String urlStr = BASE_URL + "/" + type + "/" + id + "?language=pt-BR&append_to_response=credits";
             
             if (!API_KEY.startsWith("eyJ")) {
                 urlStr += "&api_key=" + API_KEY;
@@ -83,10 +92,10 @@ public class TmdbMetadataProvider implements MovieMetadataProvider {
             
             if (response != null) {
                 MediaItem item = new MediaItem();
-                item.setTitle(response.optString("title"));
-                item.setMediaType(MediaType.MOVIE);
+                item.setTitle(response.optString("tv".equals(type) ? "name" : "title"));
+                item.setMediaType("tv".equals(type) ? MediaType.SERIES : MediaType.MOVIE);
                 
-                String releaseDate = response.optString("release_date", "");
+                String releaseDate = response.optString("tv".equals(type) ? "first_air_date" : "release_date", "");
                 if (releaseDate.length() >= 4) {
                     item.setReleaseYear(Integer.parseInt(releaseDate.substring(0, 4)));
                 }
@@ -103,15 +112,22 @@ public class TmdbMetadataProvider implements MovieMetadataProvider {
                     item.setGenre(genres.getJSONObject(0).optString("name"));
                 }
                 
-                JSONObject credits = response.optJSONObject("credits");
-                if (credits != null) {
-                    JSONArray crew = credits.optJSONArray("crew");
-                    if (crew != null) {
-                        for (int i = 0; i < crew.length(); i++) {
-                            JSONObject person = crew.getJSONObject(i);
-                            if ("Director".equals(person.optString("job"))) {
-                                item.setAuthorDirector(person.optString("name"));
-                                break;
+                if ("tv".equals(type)) {
+                    JSONArray createdBy = response.optJSONArray("created_by");
+                    if (createdBy != null && createdBy.length() > 0) {
+                        item.setAuthorDirector(createdBy.getJSONObject(0).optString("name"));
+                    }
+                } else {
+                    JSONObject credits = response.optJSONObject("credits");
+                    if (credits != null) {
+                        JSONArray crew = credits.optJSONArray("crew");
+                        if (crew != null) {
+                            for (int i = 0; i < crew.length(); i++) {
+                                JSONObject person = crew.getJSONObject(i);
+                                if ("Director".equals(person.optString("job"))) {
+                                    item.setAuthorDirector(person.optString("name"));
+                                    break;
+                                }
                             }
                         }
                     }

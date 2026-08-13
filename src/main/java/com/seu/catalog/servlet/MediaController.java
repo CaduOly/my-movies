@@ -212,6 +212,7 @@ public class MediaController extends HttpServlet {
             json.put("authorDirector", item.getAuthorDirector() != null ? item.getAuthorDirector() : "");
             json.put("synopsis", item.getSynopsis() != null ? item.getSynopsis() : "");
             json.put("posterUrl", item.getPosterUrl() != null ? item.getPosterUrl() : "");
+            json.put("mediaType", item.getMediaType() != null ? item.getMediaType().name() : "MOVIE");
             jsonArray.put(json);
         }
         
