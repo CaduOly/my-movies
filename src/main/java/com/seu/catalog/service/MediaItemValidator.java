@@ -28,6 +28,7 @@ public class MediaItemValidator {
         validateMediaType(item.getMediaType());
         validateReleaseYear(item.getReleaseYear());
         validateRating(item.getRating());
+        validateComment(item.getComment());
     }
 
     /**
@@ -70,6 +71,15 @@ public class MediaItemValidator {
             if (rating < 0 || rating > 5) {
                 throw new ValidationException("Avaliação deve estar entre 0 e 5");
             }
+        }
+    }
+
+    /**
+     * Valida comentário (máximo 1000 caracteres).
+     */
+    private void validateComment(String comment) throws ValidationException {
+        if (comment != null && comment.length() > 1000) {
+            throw new ValidationException("Comentário não pode exceder 1000 caracteres");
         }
     }
 }

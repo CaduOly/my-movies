@@ -181,7 +181,7 @@ public class MySqlMediaItemDAO implements MediaItemDAO {
      */
     @Override
     public List<MediaItem> searchByTerm(String term) throws DAOException {
-        String sql = "SELECT * FROM item_media WHERE title LIKE ? OR author_director LIKE ? ORDER BY title ASC";
+        String sql = "SELECT * FROM item_media WHERE title LIKE ? OR author_director LIKE ? OR CAST(release_year AS CHAR) LIKE ? ORDER BY title ASC";
         List<MediaItem> items = new ArrayList<>();
         
         try (Connection conn = ConnectionFactory.get();
@@ -190,6 +190,7 @@ public class MySqlMediaItemDAO implements MediaItemDAO {
             String like = "%" + term + "%";
             stmt.setString(1, like);
             stmt.setString(2, like);
+            stmt.setString(3, like);
             
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {

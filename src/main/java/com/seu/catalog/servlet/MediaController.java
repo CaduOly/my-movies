@@ -24,13 +24,22 @@ public class MediaController extends HttpServlet {
     private static final Logger LOG = Logger.getLogger(MediaController.class.getName());
     
     private CatalogService service;
+    private MovieMetadataProvider metadataProvider;
 
     @Override
     public void init() throws ServletException {
         super.init();
         var dao = new MySqlMediaItemDAO();
-        var provider = new FakeMovieMetadataProvider();
-        this.service = new CatalogService(dao, provider);
+        this.metadataProvider = (MovieMetadataProvider) getServletContext().getAttribute("metadataProvider");
+        if (this.metadataProvider == null) {
+             String apiKey = System.getenv("TMDB_API_KEY");
+             if (apiKey != null && !apiKey.trim().isEmpty()) {
+                 this.metadataProvider = new TmdbMetadataProvider();
+             } else {
+                 this.metadataProvider = new FakeMovieMetadataProvider();
+             }
+        }
+        this.service = new CatalogService(dao, this.metadataProvider);
     }
 
     @Override
@@ -40,8 +49,11 @@ public class MediaController extends HttpServlet {
 
         try {
             switch (action) {
-                case "list":
+                case "home":
                 case "":
+                    handleHome(req, resp);
+                    break;
+                case "list":
                     handleList(req, resp);
                     break;
                 case "detail":
@@ -55,6 +67,9 @@ public class MediaController extends HttpServlet {
                     break;
                 case "search":
                     handleSearch(req, resp);
+                    break;
+                case "tmdb-search":
+                    handleTmdbSearch(req, resp);
                     break;
                 default:
                     resp.sendError(404);
@@ -82,6 +97,9 @@ public class MediaController extends HttpServlet {
                 case "delete":
                     handleDelete(req, resp);
                     break;
+                case "rate":
+                    handleRate(req, resp);
+                    break;
                 default:
                     resp.sendError(404);
             }
@@ -90,6 +108,19 @@ public class MediaController extends HttpServlet {
             req.setAttribute("error", e.getMessage());
             handleNewForm(req, resp);
         }
+    }
+
+    private void handleHome(HttpServletRequest req, HttpServletResponse resp) 
+            throws ServiceException, ServletException, IOException {
+        List<MediaItem> items = service.listAllItems();
+        List<MediaItem> carouselItems = items.stream()
+            .filter(item -> item.getPosterUrl() != null && !item.getPosterUrl().isEmpty())
+            .limit(5)
+            .collect(java.util.stream.Collectors.toList());
+            
+        req.setAttribute("items", items);
+        req.setAttribute("carouselItems", carouselItems);
+        req.getRequestDispatcher("/WEB-INF/jsp/home.jsp").forward(req, resp);
     }
 
     private void handleList(HttpServletRequest req, HttpServletResponse resp) 
@@ -147,14 +178,46 @@ public class MediaController extends HttpServlet {
             throws ServiceException, ServletException, IOException {
         String term = req.getParameter("term");
         if (term == null || term.trim().isEmpty()) {
-            resp.sendError(400);
+            resp.sendRedirect(req.getContextPath() + "/app/home");
             return;
         }
 
         List<MediaItem> results = service.searchItems(term);
         req.setAttribute("items", results);
         req.setAttribute("searchTerm", term);
-        req.getRequestDispatcher("/WEB-INF/jsp/search-results.jsp").forward(req, resp);
+        req.getRequestDispatcher("/WEB-INF/jsp/home.jsp").forward(req, resp);
+    }
+
+    private void handleTmdbSearch(HttpServletRequest req, HttpServletResponse resp) 
+            throws IOException {
+        String term = req.getParameter("term");
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+        
+        if (term == null || term.trim().isEmpty()) {
+            resp.getWriter().write("[]");
+            return;
+        }
+
+        List<MediaItem> items = metadataProvider.searchByTitle(term);
+        if (items == null || items.isEmpty()) {
+            resp.getWriter().write("[]");
+            return;
+        }
+        
+        org.json.JSONArray jsonArray = new org.json.JSONArray();
+        for (MediaItem item : items) {
+            org.json.JSONObject json = new org.json.JSONObject();
+            json.put("title", item.getTitle() != null ? item.getTitle() : "");
+            json.put("releaseYear", item.getReleaseYear() != null ? item.getReleaseYear() : "");
+            json.put("genre", item.getGenre() != null ? item.getGenre() : "");
+            json.put("authorDirector", item.getAuthorDirector() != null ? item.getAuthorDirector() : "");
+            json.put("synopsis", item.getSynopsis() != null ? item.getSynopsis() : "");
+            json.put("posterUrl", item.getPosterUrl() != null ? item.getPosterUrl() : "");
+            jsonArray.put(json);
+        }
+        
+        resp.getWriter().write(jsonArray.toString());
     }
 
     private void handleSave(HttpServletRequest req, HttpServletResponse resp) 
@@ -181,6 +244,34 @@ public class MediaController extends HttpServlet {
 
         service.deleteItem(id);
         resp.sendRedirect(req.getContextPath() + "/app/list");
+    }
+
+    private void handleRate(HttpServletRequest req, HttpServletResponse resp) 
+            throws ServiceException, ValidationException, IOException {
+        Integer id = parseId(req.getParameter("id"));
+        if (id == null) {
+            resp.sendError(400);
+            return;
+        }
+
+        MediaItem item = service.getItemById(id);
+        if (item == null) {
+            resp.sendError(404);
+            return;
+        }
+
+        String ratingStr = req.getParameter("rating");
+        if (ratingStr != null && !ratingStr.isEmpty()) {
+            item.setRating(Integer.parseInt(ratingStr));
+        }
+
+        String comment = req.getParameter("comment");
+        if (comment != null) {
+            item.setComment(comment.trim().isEmpty() ? null : comment);
+        }
+
+        service.updateItem(item);
+        resp.sendRedirect(req.getContextPath() + "/app/detail?id=" + id);
     }
 
     private String extractAction(HttpServletRequest req) {
