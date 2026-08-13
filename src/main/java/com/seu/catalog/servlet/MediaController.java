@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  * Recebe requisição HTTP, coordena Service, escolhe view.
  * Responsabilidades: orquestração APENAS.
  */
-@WebServlet(urlPatterns = {"/", "/app/*"})
+@WebServlet(urlPatterns = {"/app/*"})
 public class MediaController extends HttpServlet {
     private static final Logger LOG = Logger.getLogger(MediaController.class.getName());
     
