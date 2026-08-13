@@ -69,8 +69,8 @@ public class MySqlMediaItemDAO implements MediaItemDAO {
         List<MediaItem> items = new ArrayList<>();
         
         try (Connection conn = ConnectionFactory.get();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
             
             while (rs.next()) {
                 items.add(rowToMediaItem(rs));
