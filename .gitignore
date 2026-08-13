@@ -36,7 +36,8 @@ build/
 .vscode/
 
 ### Mac OS ###
-.DS_Storeagent/
+.DS_Store
+agent/
 .idea/
 *.iml
 
