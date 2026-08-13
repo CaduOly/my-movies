@@ -27,7 +27,7 @@
                         <td><c:out value="${item.genre}" /></td>
                         <td><c:out value="${item.mediaType}" /></td>
                         <td>
-                            <a href="<c:url value='/app/detail?id=${item.id}' />" class="btn btn-sm"><fmt:message key="app.view" /></a>
+                            <a href="<c:url value='/app/detail?id=${item.id}' />" class="action-link"><fmt:message key="app.view" /></a>
                             <a href="<c:url value='/app/edit?id=${item.id}' />" class="btn btn-sm btn-secondary"><fmt:message key="app.edit" /></a>
                             <form method="POST" action="<c:url value='/app/delete' />" style="display:inline;">
                                 <input type="hidden" name="id" value="<c:out value='${item.id}' />" />

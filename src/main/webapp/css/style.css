@@ -34,6 +34,16 @@ body {
     min-height: 100vh;
 }
 
+a {
+    color: var(--accent-primary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--accent-hover);
+}
+
 .container {
     display: flex;
     min-height: 100vh;
@@ -214,6 +224,23 @@ p {
 .btn-danger:hover {
     background: var(--danger);
     color: white;
+}
+
+/* Action Links */
+.action-link {
+    color: var(--text-h3);
+    font-weight: 500;
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.action-link:hover {
+    color: var(--accent-primary);
+    background: var(--bg-sidebar);
+    border-color: var(--border-color);
 }
 
 /* Search Form */
