@@ -26,7 +26,7 @@
                 <div class="media-poster" style="height:300px; background:#E2E8F0; display:flex; align-items:center; justify-content:center;">
                     <c:choose>
                         <c:when test="${not empty item.posterUrl}">
-                            <img src="${item.posterUrl}" alt="${item.title}" style="width:100%; height:100%; object-fit:cover;" />
+                            <img src="<c:out value='${item.posterUrl}'/>" alt="<c:out value='${item.title}'/>" style="width:100%; height:100%; object-fit:cover;" />
                         </c:when>
                         <c:otherwise>
                             <span style="color:#64748B;">Sem Capa</span>
@@ -34,7 +34,7 @@
                     </c:choose>
                 </div>
                 <div class="media-info" style="padding:15px;">
-                    <h3 style="margin:0 0 5px 0; font-size:1.1rem; color:var(--text-h1);">${item.title}</h3>
+                    <h3 style="margin:0 0 5px 0; font-size:1.1rem; color:var(--text-h1);"><c:out value="${item.title}" /></h3>
                     <p style="margin:0; font-size:0.9rem; color:var(--text-muted);">${item.releaseYear} &bull; <fmt:message key="type.${item.mediaType.toString().toLowerCase()}" /></p>
                 </div>
             </a>
