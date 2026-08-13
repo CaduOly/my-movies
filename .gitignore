@@ -35,12 +35,3 @@ build/
 ### VS Code ###
 .vscode/
 
-### Mac OS ###
-.DS_Store
-agent/
-.idea/
-*.iml
-
-### Ambiente e Temporários ###
-full_diff.txt
-review.md
