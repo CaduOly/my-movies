@@ -22,6 +22,12 @@ public class ConnectionFactory {
         ? System.getenv("JDBC_PASSWORD")
         : "app123";
         
+    /**
+     * Define configurações de conexão específicas para testes.
+     * @param url A URL JDBC
+     * @param user O usuário do banco de dados
+     * @param pass A senha do banco de dados
+     */
     public static void setForTests(String url, String user, String pass) {
         jdbcUrl = url;
         jdbcUser = user;

@@ -44,13 +44,7 @@ class MediaItemValidatorTest {
         assertThrows(ValidationException.class, () -> validator.validate(item));
     }
 
-    @Test
-    @DisplayName("deve rejeitar mediaType nulo")
-    void testNullMediaType() {
-        MediaItem item = new MediaItem("Title", MediaType.MOVIE);
-        // We can't really set mediaType to null via constructor easily because it's required
-        // We will skip testing null mediaType on the MediaItem directly if there's no setter
-    }
+
 
     @Test
     @DisplayName("deve rejeitar releaseYear < 1800")

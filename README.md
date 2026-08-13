@@ -55,6 +55,10 @@ Foi disponibilizado um `Makefile` na raiz do projeto para facilitar a orquestra�
 - **Zero XSS**: Todas as entradas renderizadas de volta ao usuário utilizam a tag `<c:out>` (JSTL), prevenindo execução de scripts arbitrários.
 - **Sem ORMs ou Frameworks complexos (ex: Spring, Hibernate)**: O objetivo foi focar no funcionamento subjacente da linguagem e do protocolo HTTP.
 
+## Sobre a Configuração de Ambiente (.env)
+
+> **Aviso de Avaliação:** O arquivo `.env` contendo a chave de API do TMDB está propositalmente versionado neste repositório. Trata-se de um token descartável criado exclusivamente para facilitar a avaliação do projeto (PIT) por parte dos professores, evitando a necessidade de configurações adicionais. Em um ambiente de produção real, chaves de API nunca devem ser versionadas no código-fonte.
+
 ## Próximos Passos
 O núcleo da aplicação foi concluído.
 As possíveis expansões incluem Autofill consumindo a API do TheMovieDB (TMDB), aprimoramentos de frontend (Carrossel) e um sistema interativo de avaliações.

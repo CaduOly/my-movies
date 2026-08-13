@@ -12,7 +12,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><fmt:message key="app.title" /> | ${pageTitle}</title>
+    <title><fmt:message key="app.title" /> | <c:out value="${pageTitle}" /></title>
     <link rel="stylesheet" href="<c:url value='/css/style.css' />" />
 </head>
 <body>
@@ -38,6 +38,12 @@
             <c:if test="${not empty error}">
                 <div class="alert alert-error">
                     <c:out value="${error}" />
+                </div>
+            </c:if>
+
+            <c:if test="${not empty errorKey}">
+                <div class="alert alert-error">
+                    <fmt:message key="${errorKey}" />
                 </div>
             </c:if>
 

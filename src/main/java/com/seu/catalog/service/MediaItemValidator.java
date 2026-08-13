@@ -21,7 +21,7 @@ public class MediaItemValidator {
      */
     public void validate(MediaItem item) throws ValidationException {
         if (item == null) {
-            throw new ValidationException("Item não pode ser nulo");
+            throw new ValidationException("error.item_null");
         }
 
         validateTitle(item.getTitle());
@@ -36,10 +36,10 @@ public class MediaItemValidator {
      */
     private void validateTitle(String title) throws ValidationException {
         if (title == null || title.trim().isEmpty()) {
-            throw new ValidationException("Título é obrigatório");
+            throw new ValidationException("error.title_required");
         }
         if (title.length() > 255) {
-            throw new ValidationException("Título não pode exceder 255 caracteres");
+            throw new ValidationException("error.title_max_length");
         }
     }
 
@@ -48,7 +48,7 @@ public class MediaItemValidator {
      */
     private void validateMediaType(Object mediaType) throws ValidationException {
         if (mediaType == null) {
-            throw new ValidationException("Tipo de mídia é obrigatório");
+            throw new ValidationException("error.type_required");
         }
     }
 
@@ -58,7 +58,7 @@ public class MediaItemValidator {
     private void validateReleaseYear(Integer releaseYear) throws ValidationException {
         if (releaseYear != null) {
             if (releaseYear < 1800 || releaseYear > 2100) {
-                throw new ValidationException("Ano deve estar entre 1800 e 2100");
+                throw new ValidationException("error.year_range");
             }
         }
     }
@@ -69,7 +69,7 @@ public class MediaItemValidator {
     private void validateRating(Integer rating) throws ValidationException {
         if (rating != null) {
             if (rating < 0 || rating > 5) {
-                throw new ValidationException("Avaliação deve estar entre 0 e 5");
+                throw new ValidationException("error.rating_range");
             }
         }
     }
@@ -79,7 +79,7 @@ public class MediaItemValidator {
      */
     private void validateComment(String comment) throws ValidationException {
         if (comment != null && comment.length() > 1000) {
-            throw new ValidationException("Comentário não pode exceder 1000 caracteres");
+            throw new ValidationException("error.comment_max_length");
         }
     }
 }
