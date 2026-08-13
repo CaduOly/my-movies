@@ -13,7 +13,7 @@
         </c:when>
         <c:otherwise>
             <p>Encontrados <c:out value="${items.size()}" /> resultado(s).</p>
-            <jsp:include page="list.jsp" />
+            <jsp:include page="_items-table.jsp" />
         </c:otherwise>
     </c:choose>
 
