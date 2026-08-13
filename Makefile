@@ -26,6 +26,11 @@ start: build
 down:
 	docker compose down
 
+restart:
+	@echo "Reiniciando Docker Compose..."
+	make down
+	make start
+
 logs:
 	docker compose logs -f app
 

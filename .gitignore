@@ -39,3 +39,7 @@ build/
 .DS_Storeagent/
 .idea/
 *.iml
+
+### Ambiente e Temporários ###
+full_diff.txt
+review.md
