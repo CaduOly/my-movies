@@ -1,5 +1,9 @@
 package com.seu.catalog.infra;
 
+import com.seu.catalog.service.CatalogService;
+import com.seu.catalog.service.FakeMovieMetadataProvider;
+import com.seu.catalog.service.MovieMetadataProvider;
+import com.seu.catalog.service.TmdbMetadataProvider;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
@@ -48,7 +52,18 @@ public class AppBootstrap implements ServletContextListener {
             int migrationsApplied = flyway.migrate().migrationsExecuted;
             LOG.info("✓ Flyway: " + migrationsApplied + " migration(s) aplicada(s)");
 
-            // 3. Logar contexto
+            var dao = new MySqlMediaItemDAO();
+            
+            String apiKey = System.getenv("TMDB_API_KEY");
+            MovieMetadataProvider metadataProvider;
+            if (apiKey != null && !apiKey.trim().isEmpty()) {
+                metadataProvider = new TmdbMetadataProvider();
+            } else {
+                metadataProvider = new FakeMovieMetadataProvider();
+            }
+
+            var service = new CatalogService(dao, metadataProvider);
+
             String contextPath = sce.getServletContext().getContextPath();
             String appUrl = "http://localhost:8080" + (contextPath.isEmpty() ? "/" : contextPath);
             LOG.info("═══════════════════════════════════════════════════════════");

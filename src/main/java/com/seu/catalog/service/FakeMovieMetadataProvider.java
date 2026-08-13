@@ -1,6 +1,8 @@
 package com.seu.catalog.service;
 
 import com.seu.catalog.model.MediaItem;
+import java.util.List;
+import java.util.Collections;
 
 /**
  * Provider fake (sem rede, sem TMDB) para testes isolados do Service.
@@ -8,14 +10,14 @@ import com.seu.catalog.model.MediaItem;
 public class FakeMovieMetadataProvider implements MovieMetadataProvider {
     
     /**
-     * Retorna sempre nulo, simulando um provider offline ou sem resultados.
+     * Retorna sempre uma lista vazia, simulando um provider offline ou sem resultados.
      *
      * @param term o termo buscado
-     * @return null indicando que não encontrou
+     * @return lista vazia
      */
     @Override
-    public MediaItem searchByTitle(String term) {
-        return null;
+    public List<MediaItem> searchByTitle(String term) {
+        return Collections.emptyList();
     }
 
     /**

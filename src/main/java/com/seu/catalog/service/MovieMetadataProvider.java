@@ -1,6 +1,7 @@
 package com.seu.catalog.service;
 
 import com.seu.catalog.model.MediaItem;
+import java.util.List;
 
 /**
  * Define contrato para busca de metadados de filmes/séries.
@@ -12,10 +13,10 @@ public interface MovieMetadataProvider {
      * Busca metadados de um filme/série por termo.
      *
      * @param term termo de busca (ex: "Inception")
-     * @return item populado com metadados (pôster, gênero, sinopse),
-     *         ou null se não encontrado ou erro na busca
+     * @return lista de itens populados com metadados (pôster, gênero, sinopse),
+     *         ou lista vazia se não encontrado ou erro na busca
      */
-    MediaItem searchByTitle(String term);
+    List<MediaItem> searchByTitle(String term);
 
     /**
      * Retorna metadados de um filme/série pelo id externo.
