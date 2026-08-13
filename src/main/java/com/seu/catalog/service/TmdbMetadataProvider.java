@@ -25,6 +25,9 @@ public class TmdbMetadataProvider implements MovieMetadataProvider {
     private static final int TIMEOUT_MS = 5000;
     private static final String POSTER_BASE = "https://image.tmdb.org/t/p/w500";
 
+    /**
+     * Construtor padrão. Inicializa o provider verificando a presença da chave da API.
+     */
     public TmdbMetadataProvider() {
         if (API_KEY == null || API_KEY.trim().isEmpty()) {
             LOG.warning("TMDB_API_KEY não configurada; provider em modo fallback (retornará null)");
