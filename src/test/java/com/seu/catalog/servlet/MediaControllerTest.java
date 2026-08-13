@@ -95,4 +95,17 @@ class MediaControllerTest {
         verify(requestMock).setAttribute(eq("errorKey"), anyString());
         verify(requestDispatcherMock).forward(requestMock, responseMock);
     }
+
+    @Test
+    @DisplayName("deve lidar com about corretamente sem chamar o service")
+    void testDoGetAbout() throws Exception {
+        when(requestMock.getPathInfo()).thenReturn("/about");
+        when(requestMock.getRequestDispatcher("/WEB-INF/jsp/about.jsp")).thenReturn(requestDispatcherMock);
+
+        servlet.doGet(requestMock, responseMock);
+
+        verify(requestMock).setAttribute("appVersion", "1.0.0");
+        verify(requestDispatcherMock).forward(requestMock, responseMock);
+        verifyNoInteractions(serviceMock);
+    }
 }

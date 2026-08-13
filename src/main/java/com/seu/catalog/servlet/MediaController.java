@@ -69,6 +69,9 @@ public class MediaController extends HttpServlet {
                 case "tmdb-search":
                     handleTmdbSearch(req, resp);
                     break;
+                case "about":
+                    handleAbout(req, resp);
+                    break;
                 default:
                     resp.sendError(404);
             }
@@ -216,6 +219,21 @@ public class MediaController extends HttpServlet {
         }
         
         resp.getWriter().write(jsonArray.toString());
+    }
+
+    /**
+     * Lida com a requisição da página Sobre.
+     * Renderiza o arquivo about.jsp, não requer banco de dados.
+     * 
+     * @param req a requisição HTTP
+     * @param resp a resposta HTTP
+     * @throws ServletException em caso de erro no servlet
+     * @throws IOException em caso de erro de I/O
+     */
+    private void handleAbout(HttpServletRequest req, HttpServletResponse resp) 
+            throws ServletException, IOException {
+        req.setAttribute("appVersion", "1.0.0");
+        req.getRequestDispatcher("/WEB-INF/jsp/about.jsp").forward(req, resp);
     }
 
     private void handleSave(HttpServletRequest req, HttpServletResponse resp) 

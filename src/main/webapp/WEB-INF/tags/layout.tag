@@ -25,6 +25,7 @@
                     <li><a href="<c:url value='/app/home' />" class="nav-link"><fmt:message key="app.home" /></a></li>
                     <li><a href="<c:url value='/app/list' />" class="nav-link"><fmt:message key="app.manage" /></a></li>
                     <li><a href="<c:url value='/app/new' />" class="nav-link"><fmt:message key="app.add" /></a></li>
+                    <li><a href="<c:url value='/app/about' />" class="nav-link"><fmt:message key="app.about" /></a></li>
                 </ul>
             </nav>
             <div style="margin-top: auto; padding: 20px 0; text-align: center;">

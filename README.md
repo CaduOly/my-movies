@@ -1,5 +1,7 @@
 # Catálogo de Mídia (PIT)
 
+> 📖 **Para avaliadores:** suba a aplicação com `make start` e acesse **http://localhost:8080/app/about** para a documentação navegável (visão geral, arquitetura, telas e como testar).
+
 Um sistema web completo para gerenciamento de um catálogo de filmes e séries, desenvolvido em Java 17+.
 Este projeto aplica os conceitos fundamentais de desenvolvimento web, utilizando arquitetura em camadas (MVC) e tecnologias maduras do ecossistema Java.
 
@@ -22,7 +24,7 @@ Foi disponibilizado um `Makefile` na raiz do projeto para facilitar a orquestra�
 
 1. **Subir os serviços**:
    ```bash
-   make up
+   make start
    ```
    Este comando irá:
    - Fazer o build da aplicação usando o Maven.
@@ -59,6 +61,10 @@ Foi disponibilizado um `Makefile` na raiz do projeto para facilitar a orquestra�
 
 > **Aviso de Avaliação:** O arquivo `.env` contendo a chave de API do TMDB está propositalmente versionado neste repositório. Trata-se de um token descartável criado exclusivamente para facilitar a avaliação do projeto (PIT) por parte dos professores, evitando a necessidade de configurações adicionais. Em um ambiente de produção real, chaves de API nunca devem ser versionadas no código-fonte.
 
-## Próximos Passos
-O núcleo da aplicação foi concluído.
-As possíveis expansões incluem Autofill consumindo a API do TheMovieDB (TMDB), aprimoramentos de frontend (Carrossel) e um sistema interativo de avaliações.
+## Funcionalidades Principais
+
+- **Integração TMDB**: Preenchimento automático de dados (sinopse, ano, poster) consumindo a API do TheMovieDB.
+- **Avaliações**: Sistema interativo de nota por estrelas e comentários.
+- **Catálogo Visual**: Página inicial em formato de grid com carrossel de destaques.
+- **CRUD e Busca**: Gerenciamento completo de itens e busca por filtros.
+- **Internacionalização**: Suporte a Português e Inglês (i18n).
