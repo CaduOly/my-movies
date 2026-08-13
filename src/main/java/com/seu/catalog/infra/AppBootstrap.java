@@ -12,6 +12,7 @@ import org.flywaydb.core.Flyway;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.logging.Logger;
+import com.seu.catalog.dao.MySqlMediaItemDAO;
 
 /**
  * Listener que executa na inicialização da aplicação.
@@ -63,6 +64,8 @@ public class AppBootstrap implements ServletContextListener {
             }
 
             var service = new CatalogService(dao, metadataProvider);
+            sce.getServletContext().setAttribute("catalogService", service);
+            sce.getServletContext().setAttribute("metadataProvider", metadataProvider);
 
             String contextPath = sce.getServletContext().getContextPath();
             String appUrl = "http://localhost:8080" + (contextPath.isEmpty() ? "/" : contextPath);
@@ -73,7 +76,6 @@ public class AppBootstrap implements ServletContextListener {
 
         } catch (Exception e) {
             LOG.severe("Erro na inicialização: " + e.getMessage());
-            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }

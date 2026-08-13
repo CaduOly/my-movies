@@ -23,23 +23,21 @@ import java.util.logging.Logger;
 public class MediaController extends HttpServlet {
     private static final Logger LOG = Logger.getLogger(MediaController.class.getName());
     
+    /** Serviço principal de catálogo */
     private CatalogService service;
+    
+    /** Provedor de metadados para busca no TMDB */
     private MovieMetadataProvider metadataProvider;
 
     @Override
     public void init() throws ServletException {
         super.init();
-        var dao = new MySqlMediaItemDAO();
+        this.service = (CatalogService) getServletContext().getAttribute("catalogService");
         this.metadataProvider = (MovieMetadataProvider) getServletContext().getAttribute("metadataProvider");
-        if (this.metadataProvider == null) {
-             String apiKey = System.getenv("TMDB_API_KEY");
-             if (apiKey != null && !apiKey.trim().isEmpty()) {
-                 this.metadataProvider = new TmdbMetadataProvider();
-             } else {
-                 this.metadataProvider = new FakeMovieMetadataProvider();
-             }
+        
+        if (this.service == null || this.metadataProvider == null) {
+            throw new ServletException("Dependências não inicializadas no ServletContext");
         }
-        this.service = new CatalogService(dao, this.metadataProvider);
     }
 
     @Override
@@ -76,7 +74,7 @@ public class MediaController extends HttpServlet {
             }
         } catch (ServiceException e) {
             LOG.warning("Erro no serviço: " + e.getMessage());
-            req.setAttribute("error", "Erro ao processar requisição");
+            req.setAttribute("errorKey", "error.db_error");
             req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
         }
     }
@@ -103,9 +101,9 @@ public class MediaController extends HttpServlet {
                 default:
                     resp.sendError(404);
             }
-        } catch (ServiceException | ValidationException e) {
-            LOG.warning("Erro: " + e.getMessage());
-            req.setAttribute("error", e.getMessage());
+        } catch (ServiceException | ValidationException | IllegalArgumentException e) {
+            LOG.warning("Erro de validação/serviço: " + e.getMessage());
+            req.setAttribute("errorKey", e.getMessage() != null && e.getMessage().startsWith("error.") ? e.getMessage() : "error.validation");
             handleNewForm(req, resp);
         }
     }
@@ -306,7 +304,7 @@ public class MediaController extends HttpServlet {
             try {
                 item.setReleaseYear(Integer.parseInt(releaseYear));
             } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("Ano inválido", e);
+                throw new IllegalArgumentException("error.invalid_year", e);
             }
         }
 
@@ -321,7 +319,7 @@ public class MediaController extends HttpServlet {
             try {
                 item.setRating(Integer.parseInt(rating));
             } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("Avaliação inválida", e);
+                throw new IllegalArgumentException("error.invalid_rating", e);
             }
         }
 
