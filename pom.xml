@@ -92,6 +92,13 @@
             <version>1.19.1</version>
             <scope>test</scope>
         </dependency>
+        <!-- JSON API -->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20231013</version>
+        </dependency>
+
     </dependencies>
 
     <build>
