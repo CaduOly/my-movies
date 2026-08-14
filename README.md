@@ -1,6 +1,6 @@
 # Catálogo de Mídia (PIT)
 
-> 📖 **Para avaliadores:** suba a aplicação com `make start` e acesse **http://localhost:8080/app/about** para a documentação navegável (visão geral, arquitetura, telas e como testar).
+> 📖 **Para avaliadores:** suba a aplicação com `make start` e acesse **http://localhost:8080/app/about** para a documentação navegável (visão geral, arquitetura, telas e como testar). Você também encontra uma cópia da documentação no arquivo `my-movies - sobre.pdf` na raiz do projeto.
 
 Um sistema web completo para gerenciamento de um catálogo de filmes e séries, desenvolvido em Java 17+.
 Este projeto aplica os conceitos fundamentais de desenvolvimento web, utilizando arquitetura em camadas (MVC) e tecnologias maduras do ecossistema Java.
