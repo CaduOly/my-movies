@@ -82,7 +82,7 @@
                 <tbody>
                     <tr><td style="border: 1px solid #ddd; padding: 8px;"><code>id</code></td><td style="border: 1px solid #ddd; padding: 8px;">INT PK AUTO_INCREMENT</td><td style="border: 1px solid #ddd; padding: 8px;">Chave primária.</td></tr>
                     <tr><td style="border: 1px solid #ddd; padding: 8px;"><code>title</code></td><td style="border: 1px solid #ddd; padding: 8px;">VARCHAR(255)</td><td style="border: 1px solid #ddd; padding: 8px;">Título da obra.</td></tr>
-                    <tr><td style="border: 1px solid #ddd; padding: 8px;"><code>media_type</code></td><td style="border: 1px solid #ddd; padding: 8px;">VARCHAR(20)</td><td style="border: 1px solid #ddd; padding: 8px;">MOVIE, SERIES, BOOK, etc.</td></tr>
+                    <tr><td style="border: 1px solid #ddd; padding: 8px;"><code>media_type</code></td><td style="border: 1px solid #ddd; padding: 8px;">VARCHAR(20)</td><td style="border: 1px solid #ddd; padding: 8px;">MOVIE, SERIES</td></tr>
                     <tr><td style="border: 1px solid #ddd; padding: 8px;"><code>release_year</code></td><td style="border: 1px solid #ddd; padding: 8px;">INT</td><td style="border: 1px solid #ddd; padding: 8px;">Ano de lançamento.</td></tr>
                     <tr><td style="border: 1px solid #ddd; padding: 8px;"><code>genre</code></td><td style="border: 1px solid #ddd; padding: 8px;">VARCHAR(100)</td><td style="border: 1px solid #ddd; padding: 8px;">Gênero.</td></tr>
                     <tr><td style="border: 1px solid #ddd; padding: 8px;"><code>author_director</code></td><td style="border: 1px solid #ddd; padding: 8px;">VARCHAR(255)</td><td style="border: 1px solid #ddd; padding: 8px;">Diretor ou Autor.</td></tr>

@@ -4,7 +4,7 @@ import java.util.Objects;
 
 /**
  * Representa um item de mídia no catálogo.
- * Um item pode ser um filme, série ou livro.
+ * Um item pode ser um filme ou série.
  */
 public class MediaItem {
     
