@@ -90,7 +90,7 @@
                     <tr><td style="border: 1px solid #ddd; padding: 8px;"><code>poster_url</code></td><td style="border: 1px solid #ddd; padding: 8px;">VARCHAR(500)</td><td style="border: 1px solid #ddd; padding: 8px;">Link para a imagem da capa/poster.</td></tr>
                     <tr><td style="border: 1px solid #ddd; padding: 8px;"><code>rating</code></td><td style="border: 1px solid #ddd; padding: 8px;">INT</td><td style="border: 1px solid #ddd; padding: 8px;">Nota de 1 a 5.</td></tr>
                     <tr><td style="border: 1px solid #ddd; padding: 8px;"><code>comment</code></td><td style="border: 1px solid #ddd; padding: 8px;">TEXT</td><td style="border: 1px solid #ddd; padding: 8px;">Comentário do usuário.</td></tr>
-                    <tr><td style="border: 1px solid #ddd; padding: 8px;"><code>external_id</code></td><td style="border: 1px solid #ddd; padding: 8px;">VARCHAR(100)</td><td style="border: 1px solid #ddd; padding: 8px;">ID do TMDB.</td></tr>
+
                 </tbody>
             </table>
             <p>A estrutura do banco é gerenciada pelo <strong>Flyway</strong>. As migrações (<code>V1</code> cria tabela, <code>V2</code> popula dados seed) garantem reprodutibilidade instantânea.</p>

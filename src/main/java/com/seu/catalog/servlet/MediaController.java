@@ -330,7 +330,7 @@ public class MediaController extends HttpServlet {
         item.setGenre(req.getParameter("genre"));
         item.setSynopsis(req.getParameter("synopsis"));
         item.setPosterUrl(req.getParameter("posterUrl"));
-        item.setExternalId(req.getParameter("externalId"));
+
 
         String rating = req.getParameter("rating");
         if (rating != null && !rating.isEmpty()) {

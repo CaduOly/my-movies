@@ -16,7 +16,6 @@ public class MediaItem {
     private String synopsis;
     private MediaType mediaType;
     private String posterUrl;
-    private String externalId;
     private Integer rating;
     private String comment;
 
@@ -181,23 +180,6 @@ public class MediaItem {
         this.posterUrl = posterUrl;
     }
 
-    /**
-     * Obtém o identificador externo do item, se houver.
-     *
-     * @return o identificador externo
-     */
-    public String getExternalId() {
-        return externalId;
-    }
-
-    /**
-     * Define o identificador externo do item.
-     *
-     * @param externalId o identificador externo a ser definido
-     */
-    public void setExternalId(String externalId) {
-        this.externalId = externalId;
-    }
 
     /**
      * Obtém a nota de avaliação do item.
