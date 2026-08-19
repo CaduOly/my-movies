@@ -8,9 +8,11 @@ CREATE TABLE item_media (
     synopsis TEXT,
     media_type VARCHAR(20) NOT NULL,
     poster_url VARCHAR(500),
+    external_id VARCHAR(50),
     rating INT CHECK (rating >= 0 AND rating <= 5),
     comment TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FULLTEXT INDEX idx_search (title, author_director)
+    INDEX idx_title (title),
+    INDEX idx_author_director (author_director)
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

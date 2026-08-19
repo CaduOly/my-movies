@@ -34,7 +34,7 @@ Foi disponibilizado um `Makefile` na raiz do projeto para facilitar a orquestra�
 2. **Acessar a aplicação**:
    Abra seu navegador em: [http://localhost:8080](http://localhost:8080)
    
-   A raiz (`/`) redirecionará automaticamente para o painel principal (`/app/list`).
+   A raiz (`/`) redirecionará automaticamente para o painel principal (`/app/home`).
 
 3. **Ver logs**:
    ```bash
@@ -65,6 +65,6 @@ Foi disponibilizado um `Makefile` na raiz do projeto para facilitar a orquestra�
 
 - **Integração TMDB**: Preenchimento automático de dados (sinopse, ano, poster) consumindo a API do TheMovieDB.
 - **Avaliações**: Sistema interativo de nota por estrelas e comentários.
-- **Catálogo Visual**: Página inicial em formato de grid com carrossel de destaques.
+- **Catálogo Visual**: Página inicial em formato de grid.
 - **CRUD e Busca**: Gerenciamento completo de itens e busca por filtros.
 - **Internacionalização**: Suporte a Português e Inglês (i18n).

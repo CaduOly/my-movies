@@ -17,15 +17,15 @@
             <h2><fmt:message key="about.features" /></h2>
             <ul style="list-style-type: disc; margin-left: 20px; margin-bottom: 20px;">
                 <li><strong>CRUD Completo:</strong> Gerenciamento de itens de mídia (criar, ler, atualizar, excluir).</li>
-                <li><strong>Busca:</strong> Pesquisa por título, diretor/autor ou gênero.</li>
-                <li><strong>Avaliação:</strong> Sistema de nota por estrelas (1 a 5) e comentários.</li>
+                <li><strong>Busca:</strong> Pesquisa por título, diretor/autor ou ano.</li>
+                <li><strong>Avaliação:</strong> Sistema de nota por estrelas (0 a 5) e comentários.</li>
                 <li><strong>Integração TMDB:</strong> Preenchimento automático de dados (sinopse, ano, poster) consultando a API do The Movie Database (TMDB).</li>
                 <li><strong>Internacionalização (i18n):</strong> Suporte aos idiomas Português (PT-BR) e Inglês (EN).</li>
             </ul>
             
             <figure style="margin-top: 20px; text-align: center;">
                 <img src="<c:url value='/img/docs/home.png'/>" alt="Página inicial com catálogo" style="max-width:100%; border:1px solid #ddd; border-radius:8px; box-shadow:0 4px 6px rgba(0,0,0,0.1);"/>
-                <figcaption style="color: #777; font-size: 0.9em; margin-top: 8px;">Página inicial (Home) com carrossel e grid de filmes.</figcaption>
+                <figcaption style="color: #777; font-size: 0.9em; margin-top: 8px;">Página inicial (Home) com grid de filmes.</figcaption>
             </figure>
             
             <figure style="margin-top: 20px; text-align: center;">
@@ -88,7 +88,7 @@
                     <tr><td style="border: 1px solid #ddd; padding: 8px;"><code>author_director</code></td><td style="border: 1px solid #ddd; padding: 8px;">VARCHAR(255)</td><td style="border: 1px solid #ddd; padding: 8px;">Diretor ou Autor.</td></tr>
                     <tr><td style="border: 1px solid #ddd; padding: 8px;"><code>synopsis</code></td><td style="border: 1px solid #ddd; padding: 8px;">TEXT</td><td style="border: 1px solid #ddd; padding: 8px;">Sinopse descritiva.</td></tr>
                     <tr><td style="border: 1px solid #ddd; padding: 8px;"><code>poster_url</code></td><td style="border: 1px solid #ddd; padding: 8px;">VARCHAR(500)</td><td style="border: 1px solid #ddd; padding: 8px;">Link para a imagem da capa/poster.</td></tr>
-                    <tr><td style="border: 1px solid #ddd; padding: 8px;"><code>rating</code></td><td style="border: 1px solid #ddd; padding: 8px;">INT</td><td style="border: 1px solid #ddd; padding: 8px;">Nota de 1 a 5.</td></tr>
+                    <tr><td style="border: 1px solid #ddd; padding: 8px;"><code>rating</code></td><td style="border: 1px solid #ddd; padding: 8px;">INT</td><td style="border: 1px solid #ddd; padding: 8px;">Nota de 0 a 5.</td></tr>
                     <tr><td style="border: 1px solid #ddd; padding: 8px;"><code>comment</code></td><td style="border: 1px solid #ddd; padding: 8px;">TEXT</td><td style="border: 1px solid #ddd; padding: 8px;">Comentário do usuário.</td></tr>
 
                 </tbody>
@@ -111,7 +111,7 @@
             <p>O ambiente de execução principal depende do <strong>Docker</strong> e <strong>Docker Compose</strong>.</p>
             <ul style="margin-left: 20px; margin-bottom: 10px;">
                 <li><strong>Subir a aplicação:</strong> Execute <code>make start</code> no terminal. Acesse <code>http://localhost:8080</code>.</li>
-                <li><strong>Parar a aplicação:</strong> Execute <code>make stop</code> ou <code>make down</code>.</li>
+                <li><strong>Parar a aplicação:</strong> Execute <code>make down</code>.</li>
                 <li><strong>Rodar os testes:</strong> Execute <code>make test</code> ou <code>mvn clean test</code> (necessário Docker ativo na máquina para o Testcontainers).</li>
             </ul>
         </section>
@@ -119,7 +119,7 @@
         <section style="margin-bottom: 40px;">
             <h2><fmt:message key="about.security" /></h2>
             <ul style="list-style-type: circle; margin-left: 20px;">
-                <li><strong>SQL Injection:</strong> Completamente mitigado no DAO através do uso exclusivo de <code>PreparedStatement</code>, que efetua a parametrização segura das queries. O projeto conta com testes unitários explícitos de segurança que comprovam isso.</li>
+                <li><strong>SQL Injection:</strong> Completamente mitigado no DAO através do uso exclusivo de <code>PreparedStatement</code>, que efetua a parametrização segura das queries. O projeto conta com testes de integração (Testcontainers) que comprovam isso.</li>
                 <li><strong>Cross-Site Scripting (XSS):</strong> Mitigado nas views através do uso da JSTL core tag <code>&lt;c:out value="..." /&gt;</code>, que efetua o escape automático de entidades HTML.</li>
             </ul>
         </section>

@@ -55,12 +55,11 @@ public interface MediaItemDAO {
     boolean delete(Integer id) throws DAOException;
 
     /**
-     * Busca itens por termo (título ou autor/diretor).
-     * A busca é tolerante a case e parcial (LIKE).
+     * Busca itens por termo (título ou autor/diretor) com busca textual aproximada (FULLTEXT MATCH) e por ano parcial (LIKE).
      *
      * @param term termo de busca (não nulo)
-     * @return lista de itens encontrados (vazio se nenhum); nunca nulo
-     * @throws DAOException se ocorrer falha de acesso ao banco
+     * @return lista de itens encontrados (vazio se nenhum)
+     * @throws DAOException se ocorrer erro de persistência
      */
     List<MediaItem> searchByTerm(String term) throws DAOException;
 }

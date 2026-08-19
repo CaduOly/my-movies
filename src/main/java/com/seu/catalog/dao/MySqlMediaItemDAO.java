@@ -72,7 +72,10 @@ public class MySqlMediaItemDAO implements MediaItemDAO {
              ResultSet rs = stmt.executeQuery()) {
             
             while (rs.next()) {
-                items.add(rowToMediaItem(rs));
+                MediaItem item = rowToMediaItem(rs);
+                if (item != null) {
+                    items.add(item);
+                }
             }
             
             return items;
@@ -170,7 +173,7 @@ public class MySqlMediaItemDAO implements MediaItemDAO {
     }
 
     /**
-     * Busca itens por termo (título ou autor/diretor).
+     * Busca itens por termo (título ou autor/diretor) com busca textual aproximada (FULLTEXT MATCH) e por ano parcial (LIKE).
      * Entrada é tratada como DADO, nunca como SQL.
      *
      * @param term termo de busca (não nulo)
@@ -192,7 +195,10 @@ public class MySqlMediaItemDAO implements MediaItemDAO {
             
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    items.add(rowToMediaItem(rs));
+                    MediaItem item = rowToMediaItem(rs);
+                    if (item != null) {
+                        items.add(item);
+                    }
                 }
             }
             
@@ -211,7 +217,16 @@ public class MySqlMediaItemDAO implements MediaItemDAO {
      * @throws SQLException se houver falha ao ler dados
      */
     private MediaItem rowToMediaItem(ResultSet rs) throws SQLException {
-        MediaItem item = new MediaItem(rs.getString("title"), MediaType.valueOf(rs.getString("media_type")));
+        String mediaTypeStr = rs.getString("media_type");
+        MediaType type;
+        try {
+            type = MediaType.valueOf(mediaTypeStr);
+        } catch (IllegalArgumentException e) {
+            LOG.warning("Media type desconhecido ignorado: " + mediaTypeStr);
+            return null;
+        }
+
+        MediaItem item = new MediaItem(rs.getString("title"), type);
         item.setId(rs.getInt("id"));
         item.setAuthorDirector(rs.getString("author_director"));
         item.setReleaseYear((Integer) rs.getObject("release_year"));
