@@ -89,7 +89,7 @@ public class MySqlMediaItemDAO implements MediaItemDAO {
      * Retorna um item pelo id.
      *
      * @param id id do item
-     * @return item encontrado, ou null se não existir
+     * @return item encontrado, ou null se o ID não existir no banco ou se o tipo de mídia (media_type) gravado for inválido
      * @throws DAOException se ocorrer erro de persistência
      */
     @Override
@@ -173,8 +173,9 @@ public class MySqlMediaItemDAO implements MediaItemDAO {
     }
 
     /**
-     * Busca itens por termo (título ou autor/diretor) com busca textual aproximada (FULLTEXT MATCH) e por ano parcial (LIKE).
-     * Entrada é tratada como DADO, nunca como SQL.
+     * Busca itens por termo utilizando busca parcial (LIKE) que ignora letras maiúsculas e minúsculas
+     * nos campos título, autor/diretor e ano de lançamento.
+     * Entrada é tratada como DADO, nunca como SQL (evita injeção de comandos SQL).
      *
      * @param term termo de busca (não nulo)
      * @return lista de itens encontrados (vazio se nenhum)
@@ -182,16 +183,16 @@ public class MySqlMediaItemDAO implements MediaItemDAO {
      */
     @Override
     public List<MediaItem> searchByTerm(String term) throws DAOException {
-        String sql = "SELECT * FROM item_media WHERE MATCH(title, author_director) AGAINST(? IN BOOLEAN MODE) OR CAST(release_year AS CHAR) LIKE ? ORDER BY title ASC";
+        String sql = "SELECT * FROM item_media WHERE title LIKE ? OR author_director LIKE ? OR CAST(release_year AS CHAR) LIKE ? ORDER BY title ASC";
         List<MediaItem> items = new ArrayList<>();
         
         try (Connection conn = ConnectionFactory.get();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
-            String matchTerm = term.trim().isEmpty() ? "" : "+" + term.trim().replaceAll("\\s+", "* +") + "*";
-            String like = "%" + term + "%";
-            stmt.setString(1, matchTerm);
+            String like = "%" + term.trim() + "%";
+            stmt.setString(1, like);
             stmt.setString(2, like);
+            stmt.setString(3, like);
             
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -213,7 +214,7 @@ public class MySqlMediaItemDAO implements MediaItemDAO {
      * Converte uma linha de ResultSet em MediaItem.
      * 
      * @param rs resultset posicionado na linha desejada
-     * @return o objeto MediaItem preenchido
+     * @return o objeto MediaItem preenchido com os dados do banco de dados, ou null se o tipo de mídia (media_type) não for suportado pelo sistema (não estiver no enum MediaType)
      * @throws SQLException se houver falha ao ler dados
      */
     private MediaItem rowToMediaItem(ResultSet rs) throws SQLException {

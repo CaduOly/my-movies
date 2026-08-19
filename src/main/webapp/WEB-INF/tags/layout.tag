@@ -1,5 +1,6 @@
 <%@ tag language="java" pageEncoding="UTF-8" %>
-<%@ attribute name="pageTitle" required="true" type="java.lang.String" %>
+<%@ attribute name="pageTitle" required="false" type="java.lang.String" %>
+<%@ attribute name="pageTitleKey" required="false" type="java.lang.String" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 
@@ -12,7 +13,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><fmt:message key="app.title" /> | <c:out value="${pageTitle}" /></title>
+    <title><fmt:message key="app.title" /> | <c:choose><c:when test="${not empty pageTitleKey}"><fmt:message key="${pageTitleKey}" /></c:when><c:otherwise><c:out value="${pageTitle}" /></c:otherwise></c:choose></title>
     <link rel="stylesheet" href="<c:url value='/css/style.css' />" />
 </head>
 <body>

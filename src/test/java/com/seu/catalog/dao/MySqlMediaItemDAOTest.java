@@ -193,4 +193,55 @@ class MySqlMediaItemDAOTest {
         
         assertEquals(1, results.size());
     }
+
+    @Test
+    @DisplayName("deve buscar por título curto de 2 caracteres (ex: Up)")
+    void testSearchShortTitle() throws Exception {
+        dao.insert(new MediaItem("Up", MediaType.MOVIE));
+        
+        var results = dao.searchByTerm("Up");
+        
+        assertEquals(1, results.size());
+        assertEquals("Up", results.get(0).getTitle());
+    }
+
+    @Test
+    @DisplayName("deve buscar por termo com hífen tratado de forma literal")
+    void testSearchWithHyphen() throws Exception {
+        dao.insert(new MediaItem("Spider-Man", MediaType.MOVIE));
+        
+        var results = dao.searchByTerm("-Man");
+        
+        assertEquals(1, results.size());
+        assertEquals("Spider-Man", results.get(0).getTitle());
+    }
+
+    @Test
+    @DisplayName("deve buscar por ano de lançamento")
+    void testSearchByReleaseYear() throws Exception {
+        MediaItem item = new MediaItem("Inception", MediaType.MOVIE);
+        item.setReleaseYear(2010);
+        dao.insert(item);
+        
+        var results = dao.searchByTerm("2010");
+        
+        assertEquals(1, results.size());
+        assertEquals("Inception", results.get(0).getTitle());
+    }
+
+    @Test
+    @DisplayName("findAll deve ignorar e pular registros com media_type desconhecido")
+    void testFindAllIgnoresInvalidMediaType() throws Exception {
+        dao.insert(new MediaItem("Valid Movie", MediaType.MOVIE));
+        
+        try (var conn = com.seu.catalog.infra.ConnectionFactory.get();
+             var stmt = conn.createStatement()) {
+            stmt.execute("INSERT INTO item_media (title, media_type) VALUES ('Invalid Book', 'BOOK')");
+        }
+        
+        var results = dao.findAll();
+        
+        assertEquals(1, results.size());
+        assertEquals("Valid Movie", results.get(0).getTitle());
+    }
 }

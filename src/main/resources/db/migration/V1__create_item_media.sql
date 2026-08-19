@@ -12,5 +12,5 @@ CREATE TABLE item_media (
     comment TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FULLTEXT INDEX idx_search (title, author_director)
+    INDEX idx_title (title)
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

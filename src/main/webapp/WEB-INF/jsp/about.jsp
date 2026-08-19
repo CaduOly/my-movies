@@ -3,7 +3,7 @@
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<t:layout pageTitle="Sobre">
+<t:layout pageTitleKey="app.about">
     <div class="docs-container" style="max-width: 900px; margin: 0 auto; line-height: 1.6; padding-bottom: 40px;">
         <header style="margin-bottom: 30px; border-bottom: 1px solid #ccc; padding-bottom: 10px;">
             <h1 style="color: var(--primary-color, #e50914);"><fmt:message key="app.title" /></h1>
@@ -61,16 +61,16 @@
 
         <section style="margin-bottom: 40px;">
             <h2><fmt:message key="about.architecture" /></h2>
-            <p>O projeto segue o padrão <strong>MVC (Model-View-Controller)</strong> tradicional em Java Web puro:</p>
+            <p>O projeto segue o padrão <strong>MVC (Model-View-Controller)</strong> tradicional em Java Web puro (modelo que separa a interface, a regra de negócio e os dados):</p>
             <div style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 5px; padding: 15px; font-family: monospace; text-align: center; margin-bottom: 15px;">
-                Browser &larr;&rarr; JSP (View) &larr;&rarr; Servlet (Controller) &larr;&rarr; Service &larr;&rarr; DAO &larr;&rarr; MySQL
+                Navegador &larr;&rarr; JSP (Telas) &larr;&rarr; Servlet (Controlador) &larr;&rarr; Service (Regras) &larr;&rarr; DAO (Banco) &larr;&rarr; MySQL (Dados)
             </div>
-            <p>O <code>MediaController</code> atua como Front Controller roteando as requisições. Há forte aplicação do <strong>DIP (Dependency Inversion Principle)</strong>, exemplificado na interface <code>MovieMetadataProvider</code>. O arquivo <code>AppBootstrap.java</code> (via <code>ServletContextListener</code>) funciona como o <em>Composition Root</em>, injetando as dependências de DAOs e Services e disponibilizando-os para os Servlets no contexto da aplicação.</p>
+            <p>O <code>MediaController</code> atua como Front Controller (controlador principal), centralizando o recebimento de todas as requisições do sistema e direcionando-as para a ação correta. Há forte aplicação do <strong>DIP (Princípio de Inversão de Dependência)</strong>, exemplificado na interface <code>MovieMetadataProvider</code>, que permite que o sistema use interfaces em vez de depender diretamente de classes concretas de provedores de dados. O arquivo <code>AppBootstrap.java</code> (via <code>ServletContextListener</code>) funciona como o ponto centralizador (Composition Root), criando e interligando os DAOs e Services antes que os Servlets comecem a receber requisições.</p>
         </section>
 
         <section style="margin-bottom: 40px;">
             <h2><fmt:message key="about.datamodel" /></h2>
-            <p>A persistência é baseada em banco de dados relacional. Existe a tabela central <code>item_media</code> para armazenar todos os itens:</p>
+            <p>O armazenamento dos dados (persistência) é baseado em um banco de dados relacional. Existe a tabela principal <code>item_media</code> para guardar todos os registros:</p>
             <table style="width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 10px; border: 1px solid #ddd;">
                 <thead>
                     <tr style="background-color: #f2f2f2;">
@@ -119,8 +119,8 @@
         <section style="margin-bottom: 40px;">
             <h2><fmt:message key="about.security" /></h2>
             <ul style="list-style-type: circle; margin-left: 20px;">
-                <li><strong>SQL Injection:</strong> Completamente mitigado no DAO através do uso exclusivo de <code>PreparedStatement</code>, que efetua a parametrização segura das queries. O projeto conta com testes de integração (Testcontainers) que comprovam isso.</li>
-                <li><strong>Cross-Site Scripting (XSS):</strong> Mitigado nas views através do uso da JSTL core tag <code>&lt;c:out value="..." /&gt;</code>, que efetua o escape automático de entidades HTML.</li>
+                <li><strong>Invasão de Banco de Dados (SQL Injection):</strong> Risco completamente evitado no DAO ao utilizarmos exclusivamente <code>PreparedStatement</code>. Ele separa o comando SQL dos dados digitados pelo usuário (parametrização segura). O projeto possui testes automáticos utilizando <code>Testcontainers</code> (que criam um banco temporário no Docker durante a execução dos testes) para comprovar essa proteção.</li>
+                <li><strong>Injeção de Código nas Telas (XSS):</strong> Risco mitigado nas páginas JSP através do uso da tag <code>&lt;c:out value="..." /&gt;</code> da biblioteca JSTL, que transforma caracteres especiais como &lt; e &gt; em texto comum, impedindo que o navegador execute códigos maliciosos inseridos por usuários.</li>
             </ul>
         </section>
 

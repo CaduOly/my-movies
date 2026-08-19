@@ -55,7 +55,8 @@ public interface MediaItemDAO {
     boolean delete(Integer id) throws DAOException;
 
     /**
-     * Busca itens por termo (título ou autor/diretor) com busca textual aproximada (FULLTEXT MATCH) e por ano parcial (LIKE).
+     * Busca itens por termo utilizando busca parcial (LIKE) que ignora letras maiúsculas e minúsculas
+     * nos campos título, autor/diretor e ano de lançamento.
      *
      * @param term termo de busca (não nulo)
      * @return lista de itens encontrados (vazio se nenhum)
