@@ -8,13 +8,13 @@ Este projeto aplica os conceitos fundamentais de desenvolvimento web, utilizando
 ## Tecnologias Utilizadas
 
 - **Java 17+**: Linguagem base.
-- **Jakarta EE 10 (Servlets & JSP)**: Para controle de requisições (Front Controller) e renderização das views.
-- **JSTL e EL**: Para manipulação de dados e iterações nas JSPs de forma segura e sem scriptlets (`<% %>`).
+- **Jakarta EE 10 (Servlets & JSP)**: Para receber as requisições e mostrar as telas (views).
+- **JSTL e EL**: Para exibir e manipular os dados nas páginas de forma mais limpa e segura.
 - **MySQL 8**: Banco de dados relacional.
 - **JDBC**: Para persistência utilizando `PreparedStatement` (prevenção contra SQL Injection).
 - **Flyway**: Ferramenta de versionamento de banco de dados (Migrations).
 - **JUnit 5 & Mockito**: Testes unitários e funcionais.
-- **Testcontainers**: Para testes de integração de banco de dados com containers efêmeros.
+- **Testcontainers**: Para testar a integração com o banco de dados usando containers temporários (criados e destruídos automaticamente).
 - **Docker & Docker Compose**: Para empacotamento e execução padronizada.
 - **Maven**: Gerenciamento de dependências e build.
 
@@ -53,9 +53,9 @@ Foi disponibilizado um `Makefile` na raiz do projeto para facilitar a orquestra�
 
 ## Boas Práticas e Segurança Aplicadas
 
-- **Zero SQL Injection**: Todo o acesso ao banco de dados foi escrito com parâmetros bindados utilizando o `PreparedStatement`.
-- **Zero XSS**: Todas as entradas renderizadas de volta ao usuário utilizam a tag `<c:out>` (JSTL), prevenindo execução de scripts arbitrários.
-- **Sem ORMs ou Frameworks complexos (ex: Spring, Hibernate)**: O objetivo foi focar no funcionamento subjacente da linguagem e do protocolo HTTP.
+- **Prevenção contra SQL Injection**: Todo o acesso ao banco de dados foi escrito com consultas parametrizadas utilizando o `PreparedStatement`.
+- **Prevenção contra XSS**: Todos os dados exibidos para o usuário utilizam a tag `<c:out>` (JSTL), evitando que códigos maliciosos sejam executados na tela.
+- **Sem ORMs ou frameworks complexos (como Spring ou Hibernate)**: O objetivo principal foi entender como as coisas funcionam "por baixo dos panos" no Java e na web (HTTP).
 
 ## Sobre a Configuração de Ambiente (.env)
 
