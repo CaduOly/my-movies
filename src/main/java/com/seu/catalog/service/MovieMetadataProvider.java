@@ -10,19 +10,42 @@ import java.util.List;
 public interface MovieMetadataProvider {
     
     /**
-     * Busca metadados de um filme/série por termo.
+     * Busca metadados de um filme/série por termo utilizando o idioma padrão (pt-BR).
      *
      * @param term termo de busca (ex: "Inception")
      * @return lista de itens populados com metadados (pôster, gênero, sinopse),
      *         ou lista vazia se não encontrado ou erro na busca
      */
-    List<MediaItem> searchByTitle(String term);
+    default List<MediaItem> searchByTitle(String term) {
+        return searchByTitle(term, "pt-BR");
+    }
 
     /**
-     * Retorna metadados de um filme/série pelo id externo.
+     * Busca metadados de um filme/série por termo e idioma especificado.
+     *
+     * @param term termo de busca
+     * @param language código do idioma (ex: "pt-BR", "en-US")
+     * @return lista de itens populados com metadados
+     */
+    List<MediaItem> searchByTitle(String term, String language);
+
+    /**
+     * Retorna metadados de um filme/série pelo id externo no idioma padrão (pt-BR).
      *
      * @param externalId id no provedor externo
      * @return item populado, ou null se não encontrado
      */
-    MediaItem findById(String externalId);
+    default MediaItem findById(String externalId) {
+        return findById(externalId, "pt-BR");
+    }
+
+    /**
+     * Retorna metadados de um filme/série pelo id externo e idioma especificado.
+     *
+     * @param externalId id no provedor externo
+     * @param language código do idioma (ex: "pt-BR", "en-US")
+     * @return item populado, ou null se não encontrado
+     */
+    MediaItem findById(String externalId, String language);
 }
+

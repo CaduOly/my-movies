@@ -246,7 +246,20 @@ public class MediaController extends HttpServlet {
             return;
         }
 
-        List<MediaItem> items = metadataProvider.searchByTitle(term);
+        String lang = req.getParameter("lang");
+        if (lang == null || lang.trim().isEmpty()) {
+            if (req.getSession(false) != null) {
+                String appLocale = (String) req.getSession(false).getAttribute("appLocale");
+                if (appLocale != null && !appLocale.trim().isEmpty()) {
+                    lang = appLocale;
+                }
+            }
+        }
+        if (lang == null || lang.trim().isEmpty()) {
+            lang = "pt-BR";
+        }
+
+        List<MediaItem> items = metadataProvider.searchByTitle(term, lang);
         if (items == null || items.isEmpty()) {
             resp.getWriter().write("[]");
             return;
@@ -261,6 +274,7 @@ public class MediaController extends HttpServlet {
             json.put("authorDirector", item.getAuthorDirector() != null ? item.getAuthorDirector() : "");
             json.put("synopsis", item.getSynopsis() != null ? item.getSynopsis() : "");
             json.put("posterUrl", item.getPosterUrl() != null ? item.getPosterUrl() : "");
+            json.put("mediaType", item.getMediaType() != null ? item.getMediaType().name() : "MOVIE");
             jsonArray.put(json);
         }
         

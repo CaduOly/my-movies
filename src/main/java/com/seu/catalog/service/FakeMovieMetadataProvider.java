@@ -20,6 +20,11 @@ public class FakeMovieMetadataProvider implements MovieMetadataProvider {
         return Collections.emptyList();
     }
 
+    @Override
+    public List<MediaItem> searchByTitle(String term, String language) {
+        return Collections.emptyList();
+    }
+
     /**
      * Retorna sempre nulo para id externo consultado.
      *
@@ -28,6 +33,11 @@ public class FakeMovieMetadataProvider implements MovieMetadataProvider {
      */
     @Override
     public MediaItem findById(String externalId) {
+        return null;
+    }
+
+    @Override
+    public MediaItem findById(String externalId, String language) {
         return null;
     }
 }

@@ -215,4 +215,50 @@ class MediaControllerTest {
         
         verify(pw).write("[]");
     }
+
+    @Test
+    @DisplayName("deve retornar resultados em json para tmdb-search com termo e idioma")
+    void testTmdbSearchWithResultsAndLanguage() throws Exception {
+        when(requestMock.getPathInfo()).thenReturn("/tmdb-search");
+        when(requestMock.getParameter("term")).thenReturn("Inception");
+        when(requestMock.getParameter("lang")).thenReturn("en");
+        
+        MediaItem movie = new MediaItem();
+        movie.setTitle("Inception");
+        movie.setMediaType(MediaType.MOVIE);
+        movie.setReleaseYear(2010);
+        movie.setSynopsis("A thief who steals corporate secrets...");
+        when(metadataProviderMock.searchByTitle("Inception", "en")).thenReturn(List.of(movie));
+
+        java.io.PrintWriter pw = mock(java.io.PrintWriter.class);
+        when(responseMock.getWriter()).thenReturn(pw);
+
+        servlet.doGet(requestMock, responseMock);
+
+        verify(metadataProviderMock).searchByTitle("Inception", "en");
+        verify(pw).write(argThat((String s) -> s.contains("Inception") && s.contains("2010") && s.contains("MOVIE")));
+    }
+
+    @Test
+    @DisplayName("deve retornar série em json para tmdb-search com tipo SERIES")
+    void testTmdbSearchWithSeriesResult() throws Exception {
+        when(requestMock.getPathInfo()).thenReturn("/tmdb-search");
+        when(requestMock.getParameter("term")).thenReturn("Breaking Bad");
+        when(requestMock.getParameter("lang")).thenReturn("pt-BR");
+        
+        MediaItem series = new MediaItem();
+        series.setTitle("Breaking Bad");
+        series.setMediaType(MediaType.SERIES);
+        series.setReleaseYear(2008);
+        series.setAuthorDirector("Vince Gilligan");
+        when(metadataProviderMock.searchByTitle("Breaking Bad", "pt-BR")).thenReturn(List.of(series));
+
+        java.io.PrintWriter pw = mock(java.io.PrintWriter.class);
+        when(responseMock.getWriter()).thenReturn(pw);
+
+        servlet.doGet(requestMock, responseMock);
+
+        verify(metadataProviderMock).searchByTitle("Breaking Bad", "pt-BR");
+        verify(pw).write(argThat((String s) -> s.contains("Breaking Bad") && s.contains("SERIES") && s.contains("Vince Gilligan")));
+    }
 }

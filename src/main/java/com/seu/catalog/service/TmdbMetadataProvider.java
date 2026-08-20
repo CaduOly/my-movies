@@ -36,12 +36,19 @@ public class TmdbMetadataProvider implements MovieMetadataProvider {
 
     @Override
     public List<MediaItem> searchByTitle(String term) {
+        return searchByTitle(term, "pt-BR");
+    }
+
+    @Override
+    public List<MediaItem> searchByTitle(String term, String language) {
         List<MediaItem> items = new ArrayList<>();
         if (API_KEY == null || API_KEY.trim().isEmpty()) return items;
 
+        String lang = normalizeLanguage(language);
+
         try {
             String encodedTerm = URLEncoder.encode(term, "UTF-8");
-            String urlStr = BASE_URL + "/search/movie?query=" + encodedTerm + "&language=pt-BR";
+            String urlStr = BASE_URL + "/search/multi?query=" + encodedTerm + "&language=" + URLEncoder.encode(lang, "UTF-8");
             
             if (!API_KEY.startsWith("eyJ")) {
                 urlStr += "&api_key=" + API_KEY;
@@ -54,8 +61,14 @@ public class TmdbMetadataProvider implements MovieMetadataProvider {
                 int count = Math.min(results.length(), 6);
                 for (int i = 0; i < count; i++) {
                     JSONObject res = results.getJSONObject(i);
+                    String mediaTypeStr = res.optString("media_type");
                     int tmdbId = res.getInt("id");
-                    MediaItem item = findById(String.valueOf(tmdbId));
+                    MediaItem item = null;
+                    if ("tv".equalsIgnoreCase(mediaTypeStr)) {
+                        item = findTvById(String.valueOf(tmdbId), lang);
+                    } else if ("movie".equalsIgnoreCase(mediaTypeStr)) {
+                        item = findMovieById(String.valueOf(tmdbId), lang);
+                    }
                     if (item != null) {
                         items.add(item);
                     }
@@ -70,10 +83,25 @@ public class TmdbMetadataProvider implements MovieMetadataProvider {
 
     @Override
     public MediaItem findById(String externalId) {
+        return findById(externalId, "pt-BR");
+    }
+
+    @Override
+    public MediaItem findById(String externalId, String language) {
+        MediaItem item = findMovieById(externalId, language);
+        if (item == null) {
+            item = findTvById(externalId, language);
+        }
+        return item;
+    }
+
+    public MediaItem findMovieById(String externalId, String language) {
         if (API_KEY == null || API_KEY.trim().isEmpty()) return null;
 
+        String lang = normalizeLanguage(language);
+
         try {
-            String urlStr = BASE_URL + "/movie/" + externalId + "?language=pt-BR&append_to_response=credits";
+            String urlStr = BASE_URL + "/movie/" + externalId + "?language=" + URLEncoder.encode(lang, "UTF-8") + "&append_to_response=credits";
             
             if (!API_KEY.startsWith("eyJ")) {
                 urlStr += "&api_key=" + API_KEY;
@@ -81,14 +109,16 @@ public class TmdbMetadataProvider implements MovieMetadataProvider {
 
             JSONObject response = fetchJson(urlStr);
             
-            if (response != null) {
+            if (response != null && response.has("id")) {
                 MediaItem item = new MediaItem();
                 item.setTitle(response.optString("title"));
                 item.setMediaType(MediaType.MOVIE);
                 
                 String releaseDate = response.optString("release_date", "");
                 if (releaseDate.length() >= 4) {
-                    item.setReleaseYear(Integer.parseInt(releaseDate.substring(0, 4)));
+                    try {
+                        item.setReleaseYear(Integer.parseInt(releaseDate.substring(0, 4)));
+                    } catch (NumberFormatException ignored) {}
                 }
                 
                 item.setSynopsis(response.optString("overview"));
@@ -124,6 +154,87 @@ public class TmdbMetadataProvider implements MovieMetadataProvider {
         }
 
         return null;
+    }
+
+    public MediaItem findTvById(String externalId, String language) {
+        if (API_KEY == null || API_KEY.trim().isEmpty()) return null;
+
+        String lang = normalizeLanguage(language);
+
+        try {
+            String urlStr = BASE_URL + "/tv/" + externalId + "?language=" + URLEncoder.encode(lang, "UTF-8") + "&append_to_response=credits";
+            
+            if (!API_KEY.startsWith("eyJ")) {
+                urlStr += "&api_key=" + API_KEY;
+            }
+
+            JSONObject response = fetchJson(urlStr);
+            
+            if (response != null && response.has("id")) {
+                MediaItem item = new MediaItem();
+                item.setTitle(response.optString("name"));
+                item.setMediaType(MediaType.SERIES);
+                
+                String firstAirDate = response.optString("first_air_date", "");
+                if (firstAirDate.length() >= 4) {
+                    try {
+                        item.setReleaseYear(Integer.parseInt(firstAirDate.substring(0, 4)));
+                    } catch (NumberFormatException ignored) {}
+                }
+                
+                item.setSynopsis(response.optString("overview"));
+                
+                String posterPath = response.optString("poster_path", null);
+                if (posterPath != null && !posterPath.isEmpty() && !"null".equals(posterPath)) {
+                    item.setPosterUrl(POSTER_BASE + posterPath);
+                }
+                
+                JSONArray genres = response.optJSONArray("genres");
+                if (genres != null && genres.length() > 0) {
+                    item.setGenre(genres.getJSONObject(0).optString("name"));
+                }
+                
+                JSONArray createdBy = response.optJSONArray("created_by");
+                if (createdBy != null && createdBy.length() > 0) {
+                    item.setAuthorDirector(createdBy.getJSONObject(0).optString("name"));
+                } else {
+                    JSONObject credits = response.optJSONObject("credits");
+                    if (credits != null) {
+                        JSONArray crew = credits.optJSONArray("crew");
+                        if (crew != null) {
+                            for (int i = 0; i < crew.length(); i++) {
+                                JSONObject person = crew.getJSONObject(i);
+                                String job = person.optString("job");
+                                if ("Executive Producer".equals(job) || "Director".equals(job) || "Creator".equals(job)) {
+                                    item.setAuthorDirector(person.optString("name"));
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                return item;
+            }
+        } catch (Exception e) {
+            LOG.warning("Erro ao buscar série por id em TMDB: " + e.getMessage());
+        }
+
+        return null;
+    }
+
+    private String normalizeLanguage(String language) {
+        if (language == null || language.trim().isEmpty()) {
+            return "pt-BR";
+        }
+        String lang = language.trim();
+        if ("en".equalsIgnoreCase(lang) || "en_US".equalsIgnoreCase(lang) || "en-US".equalsIgnoreCase(lang)) {
+            return "en-US";
+        }
+        if ("pt".equalsIgnoreCase(lang) || "pt_BR".equalsIgnoreCase(lang) || "pt-BR".equalsIgnoreCase(lang)) {
+            return "pt-BR";
+        }
+        return lang.replace('_', '-');
     }
     
     private JSONObject fetchJson(String urlStr) throws Exception {

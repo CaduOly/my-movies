@@ -95,7 +95,8 @@ function searchTmdb() {
     dropdown.style.display = "block";
     dropdown.innerHTML = "<div style='padding:15px; color:var(--text-body);'><fmt:message key="form.tmdb_searching" /></div>";
     
-    fetch("<c:url value='/app/tmdb-search' />?term=" + encodeURIComponent(title))
+    const lang = "${not empty sessionScope.appLocale ? sessionScope.appLocale : 'pt-BR'}";
+    fetch("<c:url value='/app/tmdb-search' />?term=" + encodeURIComponent(title) + "&lang=" + encodeURIComponent(lang))
         .then(response => response.json())
         .then(data => {
             if (!Array.isArray(data) || data.length === 0) {
@@ -133,9 +134,12 @@ function searchTmdb() {
                 const contentDiv = document.createElement("div");
                 contentDiv.style.flex = "1";
                 
+                const isSeries = item.mediaType === 'SERIES';
+                const typeLabel = isSeries ? ' [<fmt:message key="type.series" />]' : ' [<fmt:message key="type.movie" />]';
+                
                 const titleDiv = document.createElement("div");
                 titleDiv.style.cssText = "font-weight:bold; color:#333; font-size:1rem;";
-                titleDiv.textContent = displayTitle + displayYear;
+                titleDiv.textContent = displayTitle + displayYear + typeLabel;
                 
                 const helperDiv = document.createElement("div");
                 helperDiv.style.cssText = "font-size:0.85rem; color:#666; margin-top:4px;";
@@ -165,7 +169,11 @@ function acceptSuggestion(index) {
     if (selected.authorDirector) document.getElementById("authorDirector").value = selected.authorDirector;
     if (selected.synopsis) document.getElementById("synopsis").value = selected.synopsis;
     if (selected.posterUrl) document.getElementById("posterUrl").value = selected.posterUrl;
-    document.getElementById("mediaType").value = "MOVIE";
+    if (selected.mediaType) {
+        document.getElementById("mediaType").value = selected.mediaType;
+    } else {
+        document.getElementById("mediaType").value = "MOVIE";
+    }
     
     document.getElementById("tmdbDropdown").style.display = "none";
 }
