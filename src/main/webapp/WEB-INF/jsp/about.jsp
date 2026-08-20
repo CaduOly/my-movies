@@ -20,7 +20,7 @@
                 <li><strong>Busca:</strong> Pesquisa por título, diretor/autor ou ano.</li>
                 <li><strong>Avaliação:</strong> Sistema de nota por estrelas (0 a 5) e comentários.</li>
                 <li><strong>Integração TMDB:</strong> Preenchimento automático de dados (sinopse, ano, poster) consultando a API do The Movie Database (TMDB).</li>
-                <li><strong>Internacionalização (i18n):</strong> Suporte completo aos idiomas Português (PT-BR) e Inglês (EN) em toda a interface da aplicação, incluindo menus, tabelas, formulários, detalhes das mídias, autocomplete do TMDB, erros e páginas informativas.</li>
+                <li><strong>Internacionalização (i18n):</strong> Suporte completo aos idiomas Português (PT-BR) e Inglês (EN) em toda a interface operacional (menus, tabelas, formulários, detalhes, autocomplete do TMDB e páginas de erro). Esta página de documentação está disponível apenas em português.</li>
             </ul>
             
             <figure class="docs-figure">
