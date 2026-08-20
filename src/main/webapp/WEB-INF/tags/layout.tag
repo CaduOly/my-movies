@@ -4,12 +4,8 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 
-<c:if test="${not empty param.lang}">
-    <fmt:setLocale value="${param.lang}" scope="session" />
-</c:if>
-
 <!DOCTYPE html>
-<html lang="${not empty sessionScope['javax.servlet.jsp.jstl.fmt.locale.session'] ? sessionScope['javax.servlet.jsp.jstl.fmt.locale.session'] : 'pt-BR'}">
+<html lang="${not empty sessionScope.appLocale ? sessionScope.appLocale : 'pt-BR'}">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -30,8 +26,8 @@
                 </ul>
             </nav>
             <div style="margin-top: auto; padding: 20px 0; text-align: center;">
-                <a href="?lang=pt_BR" class="action-link" style="font-weight:bold;">PT</a> | 
-                <a href="?lang=en" class="action-link" style="font-weight:bold;">EN</a>
+                <a href="<c:url value='/lang?code=pt_BR' />" class="action-link" style="font-weight:bold;">PT</a> | 
+                <a href="<c:url value='/lang?code=en' />" class="action-link" style="font-weight:bold;">EN</a>
             </div>
         </aside>
 

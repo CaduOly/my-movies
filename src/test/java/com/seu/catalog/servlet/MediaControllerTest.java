@@ -72,7 +72,7 @@ class MediaControllerTest {
         when(requestMock.getPathInfo()).thenReturn("/home");
         
         List<MediaItem> items = new ArrayList<>();
-        items.add(new MediaItem("Test Movie", MediaType.MOVIE));
+        items.add(new MediaItem() {{ setTitle("Test Movie"); setMediaType(MediaType.MOVIE); }});
         when(serviceMock.listAllItems()).thenReturn(items);
         
         when(requestMock.getRequestDispatcher("/WEB-INF/jsp/home.jsp")).thenReturn(requestDispatcherMock);
@@ -107,5 +107,98 @@ class MediaControllerTest {
         verify(requestMock).setAttribute("appVersion", "1.0.0");
         verify(requestDispatcherMock).forward(requestMock, responseMock);
         verifyNoInteractions(serviceMock);
+    }
+
+    @Test
+    @DisplayName("deve criar um item válido e redirecionar")
+    void testSaveValid() throws Exception {
+        when(requestMock.getPathInfo()).thenReturn("/save");
+        when(requestMock.getParameter("title")).thenReturn("New Movie");
+        when(requestMock.getParameter("mediaType")).thenReturn("MOVIE");
+        
+        servlet.doPost(requestMock, responseMock);
+        
+        verify(serviceMock).createItem(any(MediaItem.class));
+        verify(responseMock).sendRedirect(anyString());
+    }
+
+    @Test
+    @DisplayName("deve preservar rating e comment no update")
+    void testUpdatePreservesRatingAndComment() throws Exception {
+        when(requestMock.getPathInfo()).thenReturn("/update");
+        when(requestMock.getParameter("id")).thenReturn("1");
+        when(requestMock.getParameter("title")).thenReturn("Updated Title");
+        when(requestMock.getParameter("mediaType")).thenReturn("MOVIE");
+        
+        MediaItem existing = new MediaItem();
+        existing.setId(1);
+        existing.setRating(5);
+        existing.setComment("Excellent");
+        when(serviceMock.getItemById(1)).thenReturn(existing);
+        
+        servlet.doPost(requestMock, responseMock);
+        
+        verify(serviceMock).updateItem(argThat(item -> item.getRating() != null && item.getRating() == 5 && "Excellent".equals(item.getComment())));
+        verify(responseMock).sendRedirect(anyString());
+    }
+
+    @Test
+    @DisplayName("deve tratar erro de POST sem mediaType e nao retornar 500")
+    void testPostWithoutMediaType() throws Exception {
+        when(requestMock.getPathInfo()).thenReturn("/save");
+        when(requestMock.getParameter("title")).thenReturn("No Type");
+        when(requestMock.getParameter("mediaType")).thenReturn(""); // Missing or empty
+        when(requestMock.getRequestDispatcher(anyString())).thenReturn(requestDispatcherMock);
+        
+        servlet.doPost(requestMock, responseMock);
+        
+        verify(requestMock).setAttribute(eq("errorKey"), anyString());
+        verify(requestMock).setAttribute(eq("item"), any(MediaItem.class));
+        verify(requestDispatcherMock).forward(requestMock, responseMock);
+    }
+
+    @Test
+    @DisplayName("deve tratar rate com nota invalida e nao cair no form novo")
+    void testRateInvalidRating() throws Exception {
+        when(requestMock.getPathInfo()).thenReturn("/rate");
+        when(requestMock.getParameter("id")).thenReturn("1");
+        when(requestMock.getParameter("rating")).thenReturn("invalid");
+        when(requestMock.getRequestDispatcher(anyString())).thenReturn(requestDispatcherMock);
+        
+        MediaItem existing = new MediaItem();
+        existing.setId(1);
+        when(serviceMock.getItemById(1)).thenReturn(existing);
+        
+        servlet.doPost(requestMock, responseMock);
+        
+        verify(requestMock).setAttribute(eq("errorKey"), anyString());
+        verify(requestDispatcherMock).forward(requestMock, responseMock);
+    }
+
+    @Test
+    @DisplayName("deve retornar 404 ao deletar id inexistente")
+    void testDeleteNonExistent() throws Exception {
+        when(requestMock.getPathInfo()).thenReturn("/delete");
+        when(requestMock.getParameter("id")).thenReturn("999");
+        doThrow(new ServiceException("Not found", null)).when(serviceMock).deleteItem(999);
+        when(requestMock.getRequestDispatcher(anyString())).thenReturn(requestDispatcherMock);
+        
+        servlet.doPost(requestMock, responseMock);
+        
+        verify(requestMock).setAttribute(eq("errorKey"), anyString());
+        verify(requestDispatcherMock).forward(requestMock, responseMock);
+    }
+
+    @Test
+    @DisplayName("deve retornar [] para tmdb-search sem termo")
+    void testTmdbSearchEmpty() throws Exception {
+        when(requestMock.getPathInfo()).thenReturn("/tmdb-search");
+        when(requestMock.getParameter("term")).thenReturn("");
+        java.io.PrintWriter pw = mock(java.io.PrintWriter.class);
+        when(responseMock.getWriter()).thenReturn(pw);
+        
+        servlet.doGet(requestMock, responseMock);
+        
+        verify(pw).write("[]");
     }
 }

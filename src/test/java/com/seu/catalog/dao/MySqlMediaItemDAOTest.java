@@ -50,7 +50,7 @@ class MySqlMediaItemDAOTest {
     @Test
     @DisplayName("deve inserir item com sucesso e retornar id gerado")
     void testInsert() throws Exception {
-        MediaItem item = new MediaItem("Inception", MediaType.MOVIE);
+        MediaItem item = new MediaItem() {{ setTitle("Inception"); setMediaType(MediaType.MOVIE); }};
         item.setAuthorDirector("Christopher Nolan");
         item.setReleaseYear(2010);
         
@@ -64,8 +64,8 @@ class MySqlMediaItemDAOTest {
     @Test
     @DisplayName("deve listar todos os itens")
     void testFindAll() throws Exception {
-        dao.insert(new MediaItem("Film 1", MediaType.MOVIE));
-        dao.insert(new MediaItem("Film 2", MediaType.SERIES));
+        dao.insert(new MediaItem() {{ setTitle("Film 1"); setMediaType(MediaType.MOVIE); }});
+        dao.insert(new MediaItem() {{ setTitle("Film 2"); setMediaType(MediaType.SERIES); }});
         
         var items = dao.findAll();
         
@@ -75,7 +75,7 @@ class MySqlMediaItemDAOTest {
     @Test
     @DisplayName("deve encontrar item por id")
     void testFindById() throws Exception {
-        MediaItem item = new MediaItem("The Matrix", MediaType.MOVIE);
+        MediaItem item = new MediaItem() {{ setTitle("The Matrix"); setMediaType(MediaType.MOVIE); }};
         MediaItem saved = dao.insert(item);
         
         MediaItem found = dao.findById(saved.getId());
@@ -94,7 +94,7 @@ class MySqlMediaItemDAOTest {
     @Test
     @DisplayName("deve atualizar item")
     void testUpdate() throws Exception {
-        MediaItem item = new MediaItem("Title 1", MediaType.MOVIE);
+        MediaItem item = new MediaItem() {{ setTitle("Title 1"); setMediaType(MediaType.MOVIE); }};
         MediaItem saved = dao.insert(item);
         
         saved.setTitle("Title Updated");
@@ -108,7 +108,7 @@ class MySqlMediaItemDAOTest {
     @Test
     @DisplayName("deve retornar false se id não existe no update")
     void testUpdateNotFound() throws Exception {
-        MediaItem item = new MediaItem("Title", MediaType.MOVIE);
+        MediaItem item = new MediaItem() {{ setTitle("Title"); setMediaType(MediaType.MOVIE); }};
         item.setId(9999);
         
         boolean updated = dao.update(item);
@@ -118,7 +118,7 @@ class MySqlMediaItemDAOTest {
     @Test
     @DisplayName("deve deletar item")
     void testDelete() throws Exception {
-        MediaItem item = new MediaItem("To Delete", MediaType.MOVIE);
+        MediaItem item = new MediaItem() {{ setTitle("To Delete"); setMediaType(MediaType.MOVIE); }};
         MediaItem saved = dao.insert(item);
         
         boolean deleted = dao.delete(saved.getId());
@@ -137,9 +137,9 @@ class MySqlMediaItemDAOTest {
     @Test
     @DisplayName("deve buscar por termo com LIKE")
     void testSearchByTerm() throws Exception {
-        dao.insert(new MediaItem("Inception", MediaType.MOVIE));
-        dao.insert(new MediaItem("The Matrix", MediaType.MOVIE));
-        dao.insert(new MediaItem("Breaking Bad", MediaType.SERIES));
+        dao.insert(new MediaItem() {{ setTitle("Inception"); setMediaType(MediaType.MOVIE); }});
+        dao.insert(new MediaItem() {{ setTitle("The Matrix"); setMediaType(MediaType.MOVIE); }});
+        dao.insert(new MediaItem() {{ setTitle("Breaking Bad"); setMediaType(MediaType.SERIES); }});
         
         var results = dao.searchByTerm("matrix");
         
@@ -150,7 +150,7 @@ class MySqlMediaItemDAOTest {
     @Test
     @DisplayName("deve buscar case-insensitive")
     void testSearchCaseInsensitive() throws Exception {
-        dao.insert(new MediaItem("Inception", MediaType.MOVIE));
+        dao.insert(new MediaItem() {{ setTitle("Inception"); setMediaType(MediaType.MOVIE); }});
         
         var results = dao.searchByTerm("INCEPTION");
         
@@ -160,7 +160,7 @@ class MySqlMediaItemDAOTest {
     @Test
     @DisplayName("SQL Injection: DELETE statement injected deve falhar silenciosamente")
     void testSearchInjectionDelete() throws Exception {
-        dao.insert(new MediaItem("Valid Item", MediaType.MOVIE));
+        dao.insert(new MediaItem() {{ setTitle("Valid Item"); setMediaType(MediaType.MOVIE); }});
         
         String malicious = "'; DROP TABLE item_media; --";
         var results = dao.searchByTerm(malicious);
@@ -174,7 +174,7 @@ class MySqlMediaItemDAOTest {
     @Test
     @DisplayName("SQL Injection: UNION attack deve retornar vazio")
     void testSearchInjectionUnion() throws Exception {
-        dao.insert(new MediaItem("Real Item", MediaType.MOVIE));
+        dao.insert(new MediaItem() {{ setTitle("Real Item"); setMediaType(MediaType.MOVIE); }});
         
         String malicious = "' UNION SELECT 1,2,3,4,5,6,7,8,9,10 --";
         var results = dao.searchByTerm(malicious);
@@ -185,7 +185,7 @@ class MySqlMediaItemDAOTest {
     @Test
     @DisplayName("deve buscar por autor/diretor também")
     void testSearchByAuthor() throws Exception {
-        MediaItem item = new MediaItem("Film", MediaType.MOVIE);
+        MediaItem item = new MediaItem() {{ setTitle("Film"); setMediaType(MediaType.MOVIE); }};
         item.setAuthorDirector("Nolan");
         dao.insert(item);
         
@@ -197,7 +197,7 @@ class MySqlMediaItemDAOTest {
     @Test
     @DisplayName("deve buscar por título curto de 2 caracteres (ex: Up)")
     void testSearchShortTitle() throws Exception {
-        dao.insert(new MediaItem("Up", MediaType.MOVIE));
+        dao.insert(new MediaItem() {{ setTitle("Up"); setMediaType(MediaType.MOVIE); }});
         
         var results = dao.searchByTerm("Up");
         
@@ -208,7 +208,7 @@ class MySqlMediaItemDAOTest {
     @Test
     @DisplayName("deve buscar por termo com hífen tratado de forma literal")
     void testSearchWithHyphen() throws Exception {
-        dao.insert(new MediaItem("Spider-Man", MediaType.MOVIE));
+        dao.insert(new MediaItem() {{ setTitle("Spider-Man"); setMediaType(MediaType.MOVIE); }});
         
         var results = dao.searchByTerm("-Man");
         
@@ -219,7 +219,7 @@ class MySqlMediaItemDAOTest {
     @Test
     @DisplayName("deve buscar por ano de lançamento")
     void testSearchByReleaseYear() throws Exception {
-        MediaItem item = new MediaItem("Inception", MediaType.MOVIE);
+        MediaItem item = new MediaItem() {{ setTitle("Inception"); setMediaType(MediaType.MOVIE); }};
         item.setReleaseYear(2010);
         dao.insert(item);
         
@@ -232,7 +232,7 @@ class MySqlMediaItemDAOTest {
     @Test
     @DisplayName("findAll deve ignorar e pular registros com media_type desconhecido")
     void testFindAllIgnoresInvalidMediaType() throws Exception {
-        dao.insert(new MediaItem("Valid Movie", MediaType.MOVIE));
+        dao.insert(new MediaItem() {{ setTitle("Valid Movie"); setMediaType(MediaType.MOVIE); }});
         
         try (var conn = com.seu.catalog.infra.ConnectionFactory.get();
              var stmt = conn.createStatement()) {
@@ -248,8 +248,8 @@ class MySqlMediaItemDAOTest {
     @Test
     @DisplayName("deve buscar por termo contendo caracteres curinga do LIKE de forma literal")
     void testSearchWithWildcards() throws Exception {
-        dao.insert(new MediaItem("100% Real", MediaType.MOVIE));
-        dao.insert(new MediaItem("1000 items", MediaType.MOVIE));
+        dao.insert(new MediaItem() {{ setTitle("100% Real"); setMediaType(MediaType.MOVIE); }});
+        dao.insert(new MediaItem() {{ setTitle("1000 items"); setMediaType(MediaType.MOVIE); }});
         
         var results = dao.searchByTerm("100%");
         

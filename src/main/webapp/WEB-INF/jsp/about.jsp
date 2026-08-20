@@ -20,42 +20,42 @@
                 <li><strong>Busca:</strong> Pesquisa por título, diretor/autor ou ano.</li>
                 <li><strong>Avaliação:</strong> Sistema de nota por estrelas (0 a 5) e comentários.</li>
                 <li><strong>Integração TMDB:</strong> Preenchimento automático de dados (sinopse, ano, poster) consultando a API do The Movie Database (TMDB).</li>
-                <li><strong>Internacionalização (i18n):</strong> Suporte aos idiomas Português (PT-BR) e Inglês (EN).</li>
+                <li><strong>Internacionalização (i18n):</strong> Suporte aos idiomas Português (PT-BR) e Inglês (EN) na estrutura principal (layout, menus e mensagens de sistema), enquanto as views de conteúdo (formulários e detalhes) permanecem fixas no idioma base.</li>
             </ul>
             
-            <figure style="margin-top: 20px; text-align: center;">
-                <img src="<c:url value='/img/docs/home.png'/>" alt="Página inicial com catálogo" style="max-width:100%; border:1px solid #ddd; border-radius:8px; box-shadow:0 4px 6px rgba(0,0,0,0.1);"/>
-                <figcaption style="color: #777; font-size: 0.9em; margin-top: 8px;">Página inicial (Home) com grid de filmes.</figcaption>
+            <figure class="docs-figure">
+                <img src="<c:url value='/img/docs/home.png'/>" alt="Página inicial com catálogo" loading="lazy"/>
+                <figcaption >Página inicial (Home) com grid de filmes.</figcaption>
             </figure>
             
-            <figure style="margin-top: 20px; text-align: center;">
-                <img src="<c:url value='/img/docs/list.png'/>" alt="Tabela de gerenciamento CRUD" style="max-width:100%; border:1px solid #ddd; border-radius:8px; box-shadow:0 4px 6px rgba(0,0,0,0.1);"/>
-                <figcaption style="color: #777; font-size: 0.9em; margin-top: 8px;">Tabela de gerenciamento listando itens do catálogo.</figcaption>
+            <figure class="docs-figure">
+                <img src="<c:url value='/img/docs/list.png'/>" alt="Tabela de gerenciamento CRUD" loading="lazy"/>
+                <figcaption >Tabela de gerenciamento listando itens do catálogo.</figcaption>
             </figure>
             
-            <figure style="margin-top: 20px; text-align: center;">
-                <img src="<c:url value='/img/docs/detail.png'/>" alt="Detalhes do item com avaliação" style="max-width:100%; border:1px solid #ddd; border-radius:8px; box-shadow:0 4px 6px rgba(0,0,0,0.1);"/>
-                <figcaption style="color: #777; font-size: 0.9em; margin-top: 8px;">Detalhes do filme, com sinopse, capa, e sistema de avaliação.</figcaption>
+            <figure class="docs-figure">
+                <img src="<c:url value='/img/docs/detail.png'/>" alt="Detalhes do item com avaliação" loading="lazy"/>
+                <figcaption >Detalhes do filme, com sinopse, capa, e sistema de avaliação.</figcaption>
             </figure>
             
-            <figure style="margin-top: 20px; text-align: center;">
-                <img src="<c:url value='/img/docs/search.png'/>" alt="Resultados de busca" style="max-width:100%; border:1px solid #ddd; border-radius:8px; box-shadow:0 4px 6px rgba(0,0,0,0.1);"/>
-                <figcaption style="color: #777; font-size: 0.9em; margin-top: 8px;">Resultados de pesquisa no catálogo.</figcaption>
+            <figure class="docs-figure">
+                <img src="<c:url value='/img/docs/search.png'/>" alt="Resultados de busca" loading="lazy"/>
+                <figcaption >Resultados de pesquisa no catálogo.</figcaption>
             </figure>
             
-            <figure style="margin-top: 20px; text-align: center;">
-                <img src="<c:url value='/img/docs/form-new.png'/>" alt="Formulário de cadastro" style="max-width:100%; border:1px solid #ddd; border-radius:8px; box-shadow:0 4px 6px rgba(0,0,0,0.1);"/>
-                <figcaption style="color: #777; font-size: 0.9em; margin-top: 8px;">Formulário para adicionar novos itens.</figcaption>
+            <figure class="docs-figure">
+                <img src="<c:url value='/img/docs/form-new.png'/>" alt="Formulário de cadastro" loading="lazy"/>
+                <figcaption >Formulário para adicionar novos itens.</figcaption>
             </figure>
             
-            <figure style="margin-top: 20px; text-align: center;">
-                <img src="<c:url value='/img/docs/tmdb-autofill.png'/>" alt="Busca no TMDB com dropdown" style="max-width:100%; border:1px solid #ddd; border-radius:8px; box-shadow:0 4px 6px rgba(0,0,0,0.1);"/>
-                <figcaption style="color: #777; font-size: 0.9em; margin-top: 8px;">Busca na API do TMDB para autocompletar os dados.</figcaption>
+            <figure class="docs-figure">
+                <img src="<c:url value='/img/docs/tmdb-autofill.png'/>" alt="Busca no TMDB com dropdown" loading="lazy"/>
+                <figcaption >Busca na API do TMDB para autocompletar os dados.</figcaption>
             </figure>
             
-            <figure style="margin-top: 20px; text-align: center;">
-                <img src="<c:url value='/img/docs/form-edit.png'/>" alt="Formulário de edição" style="max-width:100%; border:1px solid #ddd; border-radius:8px; box-shadow:0 4px 6px rgba(0,0,0,0.1);"/>
-                <figcaption style="color: #777; font-size: 0.9em; margin-top: 8px;">Edição de um item existente (autofill pelo TMDB).</figcaption>
+            <figure class="docs-figure">
+                <img src="<c:url value='/img/docs/form-edit.png'/>" alt="Formulário de edição" loading="lazy"/>
+                <figcaption >Edição de um item existente (autofill pelo TMDB).</figcaption>
             </figure>
         </section>
 
@@ -71,26 +71,28 @@
         <section style="margin-bottom: 40px;">
             <h2><fmt:message key="about.datamodel" /></h2>
             <p>O armazenamento dos dados (persistência) é baseado em um banco de dados relacional. Existe a tabela principal <code>item_media</code> para guardar todos os registros:</p>
-            <table style="width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 10px; border: 1px solid #ddd;">
+            <table class="docs-table">
                 <thead>
-                    <tr style="background-color: #f2f2f2;">
-                        <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Coluna</th>
-                        <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Tipo</th>
-                        <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Descrição</th>
+                    <tr>
+                        <th>Coluna</th>
+                        <th>Tipo</th>
+                        <th>Descrição</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td style="border: 1px solid #ddd; padding: 8px;"><code>id</code></td><td style="border: 1px solid #ddd; padding: 8px;">INT PK AUTO_INCREMENT</td><td style="border: 1px solid #ddd; padding: 8px;">Chave primária.</td></tr>
-                    <tr><td style="border: 1px solid #ddd; padding: 8px;"><code>title</code></td><td style="border: 1px solid #ddd; padding: 8px;">VARCHAR(255)</td><td style="border: 1px solid #ddd; padding: 8px;">Título da obra.</td></tr>
-                    <tr><td style="border: 1px solid #ddd; padding: 8px;"><code>media_type</code></td><td style="border: 1px solid #ddd; padding: 8px;">VARCHAR(20)</td><td style="border: 1px solid #ddd; padding: 8px;">MOVIE, SERIES</td></tr>
-                    <tr><td style="border: 1px solid #ddd; padding: 8px;"><code>release_year</code></td><td style="border: 1px solid #ddd; padding: 8px;">INT</td><td style="border: 1px solid #ddd; padding: 8px;">Ano de lançamento.</td></tr>
-                    <tr><td style="border: 1px solid #ddd; padding: 8px;"><code>genre</code></td><td style="border: 1px solid #ddd; padding: 8px;">VARCHAR(100)</td><td style="border: 1px solid #ddd; padding: 8px;">Gênero.</td></tr>
-                    <tr><td style="border: 1px solid #ddd; padding: 8px;"><code>author_director</code></td><td style="border: 1px solid #ddd; padding: 8px;">VARCHAR(255)</td><td style="border: 1px solid #ddd; padding: 8px;">Diretor ou Autor.</td></tr>
-                    <tr><td style="border: 1px solid #ddd; padding: 8px;"><code>synopsis</code></td><td style="border: 1px solid #ddd; padding: 8px;">TEXT</td><td style="border: 1px solid #ddd; padding: 8px;">Sinopse descritiva.</td></tr>
-                    <tr><td style="border: 1px solid #ddd; padding: 8px;"><code>poster_url</code></td><td style="border: 1px solid #ddd; padding: 8px;">VARCHAR(500)</td><td style="border: 1px solid #ddd; padding: 8px;">Link para a imagem da capa/poster.</td></tr>
-                    <tr><td style="border: 1px solid #ddd; padding: 8px;"><code>rating</code></td><td style="border: 1px solid #ddd; padding: 8px;">INT</td><td style="border: 1px solid #ddd; padding: 8px;">Nota de 0 a 5.</td></tr>
-                    <tr><td style="border: 1px solid #ddd; padding: 8px;"><code>comment</code></td><td style="border: 1px solid #ddd; padding: 8px;">TEXT</td><td style="border: 1px solid #ddd; padding: 8px;">Comentário do usuário.</td></tr>
+                    <tr><td><code>id</code></td><td>INT PK AUTO_INCREMENT</td><td>Chave primária.</td></tr>
+                    <tr><td><code>title</code></td><td>VARCHAR(255)</td><td>Título da obra.</td></tr>
+                    <tr><td><code>media_type</code></td><td>VARCHAR(20)</td><td>MOVIE, SERIES</td></tr>
+                    <tr><td><code>release_year</code></td><td>INT</td><td>Ano de lançamento.</td></tr>
+                    <tr><td><code>genre</code></td><td>VARCHAR(100)</td><td>Gênero.</td></tr>
+                    <tr><td><code>author_director</code></td><td>VARCHAR(255)</td><td>Diretor ou Autor.</td></tr>
+                    <tr><td><code>synopsis</code></td><td>TEXT</td><td>Sinopse descritiva.</td></tr>
+                    <tr><td><code>poster_url</code></td><td>VARCHAR(500)</td><td>Link para a imagem da capa/poster.</td></tr>
+                    <tr><td><code>rating</code></td><td>INT</td><td>Nota de 0 a 5.</td></tr>
+                    <tr><td><code>comment</code></td><td>TEXT</td><td>Comentário do usuário.</td></tr>
 
+                <tr><td><code>created_at</code></td><td>TIMESTAMP</td><td>Data de criação.</td></tr>
+                    <tr><td><code>updated_at</code></td><td>TIMESTAMP</td><td>Data da última atualização.</td></tr>
                 </tbody>
             </table>
             <p>A estrutura do banco é gerenciada pelo <strong>Flyway</strong>. As migrações (<code>V1</code> cria tabela, <code>V2</code> popula dados seed) garantem reprodutibilidade instantânea.</p>
@@ -120,7 +122,7 @@
             <h2><fmt:message key="about.security" /></h2>
             <ul style="list-style-type: circle; margin-left: 20px;">
                 <li><strong>Invasão de Banco de Dados (SQL Injection):</strong> Risco completamente evitado no DAO ao utilizarmos exclusivamente <code>PreparedStatement</code>. Ele separa o comando SQL dos dados digitados pelo usuário (parametrização segura). O projeto possui testes automáticos utilizando <code>Testcontainers</code> (que criam um banco temporário no Docker durante a execução dos testes) para comprovar essa proteção.</li>
-                <li><strong>Injeção de Código nas Telas (XSS):</strong> Mitigado na maior parte das exibições através do uso da tag <code>&lt;c:out value="..." /&gt;</code> da biblioteca JSTL, que transforma caracteres especiais como &lt; e &gt; em texto comum (evitando a execução de scripts no navegador). <em>Nota: Melhorias de proteção para o autocomplete integrado com a API do TMDB estão mapeadas como evolução futura.</em></li>
+                <li><strong>Injeção de Código nas Telas (XSS):</strong> Completamente mitigado através do uso da tag <code>&lt;c:out value="..." /&gt;</code> da biblioteca JSTL, que transforma caracteres especiais como &lt; e &gt; em texto comum, e da criação segura de nós DOM no autocomplete do TMDB (evitando a execução de scripts arbitrários no navegador).</li>
             </ul>
         </section>
 

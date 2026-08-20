@@ -20,17 +20,6 @@ public class MediaItem {
     private String comment;
 
     /**
-     * Cria um novo item de mídia com os atributos obrigatórios.
-     *
-     * @param title     o título do item; não pode ser nulo ou vazio
-     * @param mediaType o tipo de mídia; não pode ser nulo
-     */
-    public MediaItem(String title, MediaType mediaType) {
-        this.title = title;
-        this.mediaType = mediaType;
-    }
-
-    /**
      * Construtor vazio padrão, útil para inicializações sem argumentos.
      */
     public MediaItem() {

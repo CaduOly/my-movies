@@ -1,4 +1,4 @@
-.PHONY: help build start down logs clean
+.PHONY: help build start down logs clean test restart
 
 help:
 	@echo "Comandos disponíveis:"
@@ -14,11 +14,11 @@ build:
 test:
 	mvn clean test
 
-start: build
+start:
 	@echo "Iniciando Docker Compose..."
 	docker compose up -d --build
 	@echo "Aguardando app estar pronto..."
-	@sleep 5
+	@until docker compose ps | grep -q "healthy"; do sleep 1; done
 	@echo ""
 	@echo "✓ App pronto em http://localhost:8080"
 	@docker compose logs app | grep -i "acesso:"
@@ -37,3 +37,8 @@ logs:
 clean:
 	docker compose down -v
 	rm -rf target
+
+test:
+	mvn clean test
+
+restart: down start

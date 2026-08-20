@@ -21,7 +21,7 @@ import org.json.JSONObject;
 public class TmdbMetadataProvider implements MovieMetadataProvider {
     private static final Logger LOG = Logger.getLogger(TmdbMetadataProvider.class.getName());
     private static final String BASE_URL = "https://api.themoviedb.org/3";
-    private static final String API_KEY = System.getenv("TMDB_API_KEY");
+    private String API_KEY = System.getenv("TMDB_API_KEY");
     private static final int TIMEOUT_MS = 5000;
     private static final String POSTER_BASE = "https://image.tmdb.org/t/p/w500";
 

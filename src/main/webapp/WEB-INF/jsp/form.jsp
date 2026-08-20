@@ -101,24 +101,47 @@ function searchTmdb() {
             
             currentTmdbData = data;
             
-            let html = "";
+            dropdown.innerHTML = "";
             for (let i = 0; i < data.length; i++) {
                 const item = data[i];
                 const posterSrc = item.posterUrl ? item.posterUrl : '';
-                const posterHtml = posterSrc ? '<img src="' + posterSrc + '" style="width:40px; height:60px; object-fit:cover; border-radius:4px;" />' : '<div style="width:40px; height:60px; background:#eee; border-radius:4px;"></div>';
                 const displayTitle = item.title || title;
                 const displayYear = item.releaseYear ? ' (' + item.releaseYear + ')' : "";
                 
-                html += 
-                    '<div onclick="acceptSuggestion(' + i + ')" style="display:flex; gap:12px; padding:10px; cursor:pointer; align-items:center; transition:background 0.2s; border-bottom:1px solid #eee;" onmouseover="this.style.background=\'#f0f0f0\'" onmouseout="this.style.background=\'transparent\'">' +
-                        posterHtml +
-                        '<div style="flex:1;">' +
-                            '<div style="font-weight:bold; color:#333; font-size:1rem;">' + displayTitle + displayYear + '</div>' +
-                            '<div style="font-size:0.85rem; color:#666; margin-top:4px;">Clique para preencher</div>' +
-                        '</div>' +
-                    '</div>';
+                const div = document.createElement("div");
+                div.onclick = function() { acceptSuggestion(i); };
+                div.style.cssText = "display:flex; gap:12px; padding:10px; cursor:pointer; align-items:center; transition:background 0.2s; border-bottom:1px solid #eee;";
+                div.onmouseover = function() { this.style.background = '#f0f0f0'; };
+                div.onmouseout = function() { this.style.background = 'transparent'; };
+                
+                if (posterSrc) {
+                    const img = document.createElement("img");
+                    img.src = posterSrc;
+                    img.style.cssText = "width:40px; height:60px; object-fit:cover; border-radius:4px;";
+                    div.appendChild(img);
+                } else {
+                    const placeholder = document.createElement("div");
+                    placeholder.style.cssText = "width:40px; height:60px; background:#eee; border-radius:4px;";
+                    div.appendChild(placeholder);
+                }
+                
+                const contentDiv = document.createElement("div");
+                contentDiv.style.flex = "1";
+                
+                const titleDiv = document.createElement("div");
+                titleDiv.style.cssText = "font-weight:bold; color:#333; font-size:1rem;";
+                titleDiv.textContent = displayTitle + displayYear;
+                
+                const helperDiv = document.createElement("div");
+                helperDiv.style.cssText = "font-size:0.85rem; color:#666; margin-top:4px;";
+                helperDiv.textContent = "Clique para preencher";
+                
+                contentDiv.appendChild(titleDiv);
+                contentDiv.appendChild(helperDiv);
+                
+                div.appendChild(contentDiv);
+                dropdown.appendChild(div);
             }
-            dropdown.innerHTML = html;
         })
         .catch(err => {
             console.error(err);

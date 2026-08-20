@@ -228,7 +228,9 @@ public class MySqlMediaItemDAO implements MediaItemDAO {
             return null;
         }
 
-        MediaItem item = new MediaItem(rs.getString("title"), type);
+        MediaItem item = new MediaItem();
+        item.setTitle(rs.getString("title"));
+        item.setMediaType(type);
         item.setId(rs.getInt("id"));
         item.setAuthorDirector(rs.getString("author_director"));
         item.setReleaseYear((Integer) rs.getObject("release_year"));

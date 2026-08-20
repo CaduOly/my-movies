@@ -469,3 +469,37 @@ p {
         padding-top: 0;
     }
 }
+
+/* Docs Styles */
+.docs-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+}
+.docs-table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    background-color: #f2f2f2;
+}
+.docs-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+.docs-figure {
+    margin-top: 20px;
+    text-align: center;
+}
+.docs-figure img {
+    max-width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+.docs-figure figcaption {
+    color: #777;
+    font-size: 0.9em;
+    margin-top: 8px;
+}
