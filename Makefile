@@ -18,18 +18,15 @@ start:
 	@echo "Iniciando Docker Compose..."
 	docker compose up -d --build
 	@echo "Aguardando app estar pronto..."
-	@until docker compose ps | grep -q "healthy"; do sleep 1; done
+	@until docker compose logs app 2>&1 | grep -q -i "Server startup\|Acesso:"; do sleep 1; done
 	@echo ""
 	@echo "✓ App pronto em http://localhost:8080"
-	@docker compose logs app | grep -i "acesso:"
+	@docker compose logs app | grep -i "acesso:" || true
 
 down:
 	docker compose down
 
-restart:
-	@echo "Reiniciando Docker Compose..."
-	make down
-	make start
+restart: down start
 
 logs:
 	docker compose logs -f app
@@ -37,8 +34,3 @@ logs:
 clean:
 	docker compose down -v
 	rm -rf target
-
-test:
-	mvn clean test
-
-restart: down start
