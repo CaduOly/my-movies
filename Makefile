@@ -12,7 +12,7 @@ build:
 	mvn clean package -DskipTests
 
 test:
-	mvn test
+	mvn clean test
 
 start: build
 	@echo "Iniciando Docker Compose..."
