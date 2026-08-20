@@ -51,6 +51,22 @@ Foi disponibilizado um `Makefile` na raiz do projeto para facilitar a orquestra�
    make clean
    ```
 
+## Execução de Testes e Documentação
+
+Para executar os testes automatizados ou gerar a documentação técnica do projeto, utilize os comandos abaixo:
+
+* **Executar a suíte de testes**:
+  ```bash
+  make test
+  # ou alternativamente: mvn clean test
+  ```
+
+* **Gerar documentação técnica (Javadoc)**:
+  ```bash
+  mvn javadoc:javadoc
+  ```
+  A documentação gerada estará disponível no diretório `target/site/apidocs/index.html`.
+
 ## Boas Práticas e Segurança Aplicadas
 
 - **Prevenção contra SQL Injection**: Todo o acesso ao banco de dados foi escrito com consultas parametrizadas utilizando o `PreparedStatement`.
