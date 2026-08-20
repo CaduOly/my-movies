@@ -16,7 +16,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
+
 
 /**
  * Servlet controlador principal da aplicação.
@@ -129,30 +129,7 @@ public class MediaController extends HttpServlet {
             LOG.warning("Erro de validação/serviço: " + e.getMessage());
             req.setAttribute("errorKey", e.getMessage() != null && e.getMessage().startsWith("error.") ? e.getMessage() : "error.validation");
             
-            MediaItem partialItem = new MediaItem();
-            partialItem.setTitle(req.getParameter("title"));
-            try {
-                String type = req.getParameter("mediaType");
-                if (type != null && !type.isBlank()) {
-                    partialItem.setMediaType(MediaType.valueOf(type));
-                }
-            } catch (Exception ex) {}
-            String releaseYear = req.getParameter("releaseYear");
-            if (releaseYear != null && !releaseYear.isEmpty()) {
-                try { partialItem.setReleaseYear(Integer.parseInt(releaseYear)); } catch (Exception ex) {}
-            }
-            partialItem.setAuthorDirector(req.getParameter("authorDirector"));
-            partialItem.setGenre(req.getParameter("genre"));
-            partialItem.setSynopsis(req.getParameter("synopsis"));
-            partialItem.setPosterUrl(req.getParameter("posterUrl"));
-            partialItem.setComment(req.getParameter("comment"));
-            String rating = req.getParameter("rating");
-            if (rating != null && !rating.isEmpty()) {
-                try { partialItem.setRating(Integer.parseInt(rating)); } catch (Exception ex) {}
-            }
-            if ("update".equals(action)) {
-                partialItem.setId(parseId(req.getParameter("id")));
-            }
+            MediaItem partialItem = extractMediaItemFromRequest(req, "update".equals(action), true);
             
             req.setAttribute("item", partialItem);
             req.setAttribute("isEdit", "update".equals(action));
@@ -321,6 +298,10 @@ public class MediaController extends HttpServlet {
     private void handleUpdate(HttpServletRequest req, HttpServletResponse resp) 
             throws ValidationException, ServiceException, IOException {
         MediaItem item = extractMediaItemFromRequest(req, true);
+        if (item.getId() == null) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
         MediaItem existing = service.getItemById(item.getId());
         if (existing == null) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -405,17 +386,26 @@ public class MediaController extends HttpServlet {
      * Extrai os dados da requisição para um MediaItem.
      */
     private MediaItem extractMediaItemFromRequest(HttpServletRequest req, boolean isEdit) {
+        return extractMediaItemFromRequest(req, isEdit, false);
+    }
+
+    private MediaItem extractMediaItemFromRequest(HttpServletRequest req, boolean isEdit, boolean lenient) {
         MediaItem item = new MediaItem();
         item.setTitle(req.getParameter("title"));
         
         String mediaTypeParam = req.getParameter("mediaType");
         if (mediaTypeParam == null || mediaTypeParam.isBlank()) {
-            throw new IllegalArgumentException("error.type_required");
-        }
-        try {
-            item.setMediaType(MediaType.valueOf(mediaTypeParam));
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("error.type_required", e);
+            if (!lenient) {
+                throw new IllegalArgumentException("error.type_required");
+            }
+        } else {
+            try {
+                item.setMediaType(MediaType.valueOf(mediaTypeParam));
+            } catch (IllegalArgumentException e) {
+                if (!lenient) {
+                    throw new IllegalArgumentException("error.type_required", e);
+                }
+            }
         }
 
         if (isEdit) {
@@ -427,7 +417,11 @@ public class MediaController extends HttpServlet {
             try {
                 item.setReleaseYear(Integer.parseInt(releaseYear));
             } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("error.invalid_year", e);
+                if (!lenient) {
+                    throw new IllegalArgumentException("error.invalid_year", e);
+                } else {
+                    LOG.fine("Erro ao converter releaseYear lenientmente: " + e.getMessage());
+                }
             }
         }
 
@@ -436,13 +430,16 @@ public class MediaController extends HttpServlet {
         item.setSynopsis(req.getParameter("synopsis"));
         item.setPosterUrl(req.getParameter("posterUrl"));
 
-
         String rating = req.getParameter("rating");
         if (rating != null && !rating.isEmpty()) {
             try {
                 item.setRating(Integer.parseInt(rating));
             } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("error.invalid_rating", e);
+                if (!lenient) {
+                    throw new IllegalArgumentException("error.invalid_rating", e);
+                } else {
+                    LOG.fine("Erro ao converter rating lenientmente: " + e.getMessage());
+                }
             }
         }
 

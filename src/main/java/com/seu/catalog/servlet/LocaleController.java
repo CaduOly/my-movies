@@ -28,7 +28,8 @@ public class LocaleController extends HttpServlet {
         }
 
         String referer = req.getHeader("Referer");
-        if (referer != null && !referer.isEmpty()) {
+        String base = req.getRequestURL().toString().replace(req.getRequestURI(), req.getContextPath());
+        if (referer != null && referer.startsWith(base)) {
             resp.sendRedirect(referer);
         } else {
             resp.sendRedirect(req.getContextPath() + "/app/home");

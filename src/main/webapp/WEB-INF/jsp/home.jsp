@@ -3,7 +3,7 @@
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<t:layout pageTitle="Início">
+<t:layout pageTitleKey="app.home">
     
     
 
@@ -13,10 +13,10 @@
     <!-- Grid de Catálogo -->
     <c:choose>
         <c:when test="${not empty searchTerm}">
-            <h2>Resultados para: <c:out value="${searchTerm}" /></h2>
+            <h2><fmt:message key="home.search_results" /> <c:out value="${searchTerm}" /></h2>
         </c:when>
         <c:otherwise>
-            <h2>Catálogo de Filmes e Séries</h2>
+            <h2><fmt:message key="home.catalog_title" /></h2>
         </c:otherwise>
     </c:choose>
     
@@ -29,7 +29,7 @@
                             <img src="<c:out value='${item.posterUrl}'/>" alt="<c:out value='${item.title}'/>" style="width:100%; height:100%; object-fit:cover;" />
                         </c:when>
                         <c:otherwise>
-                            <span style="color:#64748B;">Sem Capa</span>
+                            <span style="color:#64748B;"><fmt:message key="detail.no_cover" /></span>
                         </c:otherwise>
                     </c:choose>
                 </div>

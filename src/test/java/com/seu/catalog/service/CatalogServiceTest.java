@@ -21,14 +21,11 @@ class CatalogServiceTest {
     @Mock
     private MediaItemDAO daoMock;
     
-    @Mock
-    private MovieMetadataProvider providerMock;
-    
     private CatalogService service;
 
     @BeforeEach
     void setUp() {
-        service = new CatalogService(daoMock, providerMock);
+        service = new CatalogService(daoMock);
     }
 
     @Test

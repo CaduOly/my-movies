@@ -21,14 +21,14 @@
                         <img src="<c:out value='${item.posterUrl}' />" alt="<c:out value='${item.title}' />" style="width:100%; display:block;" />
                     </c:when>
                     <c:otherwise>
-                        <div style="width:100%; height:450px; background:#E2E8F0; display:flex; align-items:center; justify-content:center; color:#64748B;">Sem Capa</div>
+                        <div style="width:100%; height:450px; background:#E2E8F0; display:flex; align-items:center; justify-content:center; color:#64748B;"><fmt:message key="detail.no_cover" /></div>
                     </c:otherwise>
                 </c:choose>
             </div>
 
             <!-- Formulário de Avaliação -->
             <div class="rating-section" style="background:var(--bg-secondary); padding:20px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
-                <h3 style="margin-top:0;">Avaliar</h3>
+                <h3 style="margin-top:0;"><fmt:message key="detail.rate" /></h3>
                 <form method="POST" action="<c:url value='/app/rate' />">
                     <input type="hidden" name="id" value="${item.id}" />
                     
@@ -50,11 +50,12 @@
                     </div>
 
                     <div style="margin-bottom:15px;">
-                        <textarea id="comment" name="comment" rows="3" placeholder="Deixe um comentário..." style="width:100%; border:1px solid #CBD5E1; border-radius:4px; padding:10px; font-family:inherit; resize:vertical;" maxlength="1000" onkeyup="document.getElementById('charCount').textContent = this.value.length + '/1000'"><c:out value="${item.comment}" /></textarea>
+                        <fmt:message key="detail.comment_placeholder" var="commentPlaceholder" />
+                        <textarea id="comment" name="comment" rows="3" placeholder="${commentPlaceholder}" style="width:100%; border:1px solid #CBD5E1; border-radius:4px; padding:10px; font-family:inherit; resize:vertical;" maxlength="1000" onkeyup="document.getElementById('charCount').textContent = this.value.length + '/1000'"><c:out value="${item.comment}" /></textarea>
                         <div style="text-align:right; font-size:0.8rem; color:#64748B;" id="charCount">${empty item.comment ? 0 : item.comment.length()}/1000</div>
                     </div>
                     
-                    <button type="submit" class="btn btn-primary" style="width:100%;">Salvar Avaliação</button>
+                    <button type="submit" class="btn btn-primary" style="width:100%;"><fmt:message key="detail.save_rating" /></button>
                 </form>
             </div>
         </div>
@@ -65,22 +66,22 @@
             <hr style="border: 1px solid #F1F5F9; margin-bottom: 20px;" />
             
             <p style="font-size: 1.1rem; margin-bottom: 20px; color:var(--text-body);">
-                <strong>Diretor:</strong> <c:out value="${empty item.authorDirector ? '-' : item.authorDirector}" /> &bull; 
-                <strong>Ano:</strong> <c:out value="${empty item.releaseYear ? '-' : item.releaseYear}" /> &bull; 
-                <strong>Gênero:</strong> <c:out value="${empty item.genre ? '-' : item.genre}" /> &bull;
-                <strong>Tipo:</strong> <fmt:message key="type.${item.mediaType.toString().toLowerCase()}" />
+                <strong><fmt:message key="item.authorDirector" />:</strong> <c:out value="${empty item.authorDirector ? '-' : item.authorDirector}" /> &bull; 
+                <strong><fmt:message key="item.releaseYear" />:</strong> <c:out value="${empty item.releaseYear ? '-' : item.releaseYear}" /> &bull; 
+                <strong><fmt:message key="item.genre" />:</strong> <c:out value="${empty item.genre ? '-' : item.genre}" /> &bull;
+                <strong><fmt:message key="item.mediaType" />:</strong> <fmt:message key="type.${item.mediaType.toString().toLowerCase()}" />
             </p>
             
             <hr style="border: 1px solid #F1F5F9; margin-bottom: 20px;" />
             
-            <h3 style="color:var(--text-h1);">Sinopse</h3>
+            <h3 style="color:var(--text-h1);"><fmt:message key="item.synopsis" /></h3>
             <p style="line-height: 1.8; color:var(--text-body); text-align:justify;">
                 <c:choose>
                     <c:when test="${not empty item.synopsis}">
                         <c:out value="${item.synopsis}" />
                     </c:when>
                     <c:otherwise>
-                        <em>Nenhuma sinopse disponível.</em>
+                        <em><fmt:message key="detail.no_synopsis" /></em>
                     </c:otherwise>
                 </c:choose>
             </p>

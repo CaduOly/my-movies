@@ -3,8 +3,13 @@
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<t:layout pageTitle="${isEdit ? 'Editar Mídia' : 'Novo Item'}">
-    <h2><c:out value="${isEdit ? 'Editar Mídia' : 'Novo Item'}" /></h2>
+<t:layout pageTitleKey="${isEdit ? 'app.edit' : 'app.new'}">
+    <h2>
+        <c:choose>
+            <c:when test="${isEdit}"><fmt:message key="app.edit" /></c:when>
+            <c:otherwise><fmt:message key="app.new" /></c:otherwise>
+        </c:choose>
+    </h2>
 
     <form method="POST" action="<c:url value='${isEdit ? \"/app/update\" : \"/app/save\"}' />" class="item-form">
         
@@ -16,7 +21,7 @@
             <label for="title"><fmt:message key="item.title" /> *</label>
             <div style="display:flex; gap:10px;">
                 <input type="text" id="title" name="title" value="<c:out value='${item.title}' />" required maxlength="200" style="flex:1;" />
-                <button type="button" class="btn btn-secondary" onclick="searchTmdb()">Buscar TMDB</button>
+                <button type="button" class="btn btn-secondary" onclick="searchTmdb()"><fmt:message key="form.tmdb_search" /></button>
             </div>
             <!-- Dropdown de Sugestões -->
             <div id="tmdbDropdown" style="display:none; position:absolute; top:100%; left:0; width:calc(100% - 130px); background:#ffffff; border:1px solid #ccc; border-radius:4px; box-shadow:0 4px 12px rgba(0,0,0,0.3); z-index:9999; margin-top:4px; overflow:hidden;">
@@ -82,19 +87,19 @@ let currentTmdbData = [];
 function searchTmdb() {
     var title = document.getElementById("title").value;
     if (!title) {
-        alert("Digite um título primeiro!");
+        alert("<fmt:message key="form.tmdb_empty_title" />");
         return;
     }
     
     const dropdown = document.getElementById("tmdbDropdown");
     dropdown.style.display = "block";
-    dropdown.innerHTML = "<div style='padding:15px; color:var(--text-body);'>Buscando...</div>";
+    dropdown.innerHTML = "<div style='padding:15px; color:var(--text-body);'><fmt:message key="form.tmdb_searching" /></div>";
     
     fetch("<c:url value='/app/tmdb-search' />?term=" + encodeURIComponent(title))
         .then(response => response.json())
         .then(data => {
             if (!Array.isArray(data) || data.length === 0) {
-                dropdown.innerHTML = "<div style='padding:15px; color:var(--text-body);'>Nenhum resultado encontrado.</div>";
+                dropdown.innerHTML = "<div style='padding:15px; color:var(--text-body);'><fmt:message key="form.tmdb_no_results" /></div>";
                 setTimeout(() => { dropdown.style.display = "none"; }, 2500);
                 return;
             }
@@ -134,7 +139,7 @@ function searchTmdb() {
                 
                 const helperDiv = document.createElement("div");
                 helperDiv.style.cssText = "font-size:0.85rem; color:#666; margin-top:4px;";
-                helperDiv.textContent = "Clique para preencher";
+                helperDiv.textContent = "<fmt:message key="form.tmdb_click_fill" />";
                 
                 contentDiv.appendChild(titleDiv);
                 contentDiv.appendChild(helperDiv);
@@ -145,7 +150,7 @@ function searchTmdb() {
         })
         .catch(err => {
             console.error(err);
-            dropdown.innerHTML = "<div style='padding:15px; color:red;'>Erro ao consultar TMDB.</div>";
+            dropdown.innerHTML = "<div style='padding:15px; color:red;'><fmt:message key="form.tmdb_error" /></div>";
             setTimeout(() => { dropdown.style.display = "none"; }, 2500);
         });
 }

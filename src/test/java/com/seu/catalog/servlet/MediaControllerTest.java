@@ -143,6 +143,20 @@ class MediaControllerTest {
     }
 
     @Test
+    @DisplayName("deve retornar 400 ao atualizar item sem id")
+    void testUpdateWithoutId() throws Exception {
+        when(requestMock.getPathInfo()).thenReturn("/update");
+        when(requestMock.getParameter("id")).thenReturn(null);
+        when(requestMock.getParameter("title")).thenReturn("Updated Title");
+        when(requestMock.getParameter("mediaType")).thenReturn("MOVIE");
+        
+        servlet.doPost(requestMock, responseMock);
+        
+        verify(responseMock).sendError(HttpServletResponse.SC_BAD_REQUEST);
+        verify(serviceMock, never()).updateItem(any());
+    }
+
+    @Test
     @DisplayName("deve tratar erro de POST sem mediaType e nao retornar 500")
     void testPostWithoutMediaType() throws Exception {
         when(requestMock.getPathInfo()).thenReturn("/save");

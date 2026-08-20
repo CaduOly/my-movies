@@ -20,7 +20,7 @@
                 <li><strong>Busca:</strong> Pesquisa por título, diretor/autor ou ano.</li>
                 <li><strong>Avaliação:</strong> Sistema de nota por estrelas (0 a 5) e comentários.</li>
                 <li><strong>Integração TMDB:</strong> Preenchimento automático de dados (sinopse, ano, poster) consultando a API do The Movie Database (TMDB).</li>
-                <li><strong>Internacionalização (i18n):</strong> Suporte aos idiomas Português (PT-BR) e Inglês (EN) na estrutura principal (layout, menus e mensagens de sistema), enquanto as views de conteúdo (formulários e detalhes) permanecem fixas no idioma base.</li>
+                <li><strong>Internacionalização (i18n):</strong> Suporte completo aos idiomas Português (PT-BR) e Inglês (EN) em toda a interface da aplicação, incluindo menus, tabelas, formulários, detalhes das mídias, autocomplete do TMDB, erros e páginas informativas.</li>
             </ul>
             
             <figure class="docs-figure">
@@ -123,6 +123,7 @@
             <ul style="list-style-type: circle; margin-left: 20px;">
                 <li><strong>Invasão de Banco de Dados (SQL Injection):</strong> Risco completamente evitado no DAO ao utilizarmos exclusivamente <code>PreparedStatement</code>. Ele separa o comando SQL dos dados digitados pelo usuário (parametrização segura). O projeto possui testes automáticos utilizando <code>Testcontainers</code> (que criam um banco temporário no Docker durante a execução dos testes) para comprovar essa proteção.</li>
                 <li><strong>Injeção de Código nas Telas (XSS):</strong> Completamente mitigado através do uso da tag <code>&lt;c:out value="..." /&gt;</code> da biblioteca JSTL, que transforma caracteres especiais como &lt; e &gt; em texto comum, e da criação segura de nós DOM no autocomplete do TMDB (evitando a execução de scripts arbitrários no navegador).</li>
+                <li><strong>Falsificação de Requisição entre Sites (CSRF):</strong> Por não possuir controle de sessão autenticada ou áreas restritas por senha, o impacto de ataques CSRF é considerado negligenciável neste cenário. Por esse motivo, mecanismos de token CSRF não foram integrados no escopo acadêmico do projeto.</li>
             </ul>
         </section>
 
