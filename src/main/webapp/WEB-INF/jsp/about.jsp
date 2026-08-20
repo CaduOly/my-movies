@@ -120,7 +120,7 @@
             <h2><fmt:message key="about.security" /></h2>
             <ul style="list-style-type: circle; margin-left: 20px;">
                 <li><strong>Invasão de Banco de Dados (SQL Injection):</strong> Risco completamente evitado no DAO ao utilizarmos exclusivamente <code>PreparedStatement</code>. Ele separa o comando SQL dos dados digitados pelo usuário (parametrização segura). O projeto possui testes automáticos utilizando <code>Testcontainers</code> (que criam um banco temporário no Docker durante a execução dos testes) para comprovar essa proteção.</li>
-                <li><strong>Injeção de Código nas Telas (XSS):</strong> Risco mitigado nas páginas JSP através do uso da tag <code>&lt;c:out value="..." /&gt;</code> da biblioteca JSTL, que transforma caracteres especiais como &lt; e &gt; em texto comum, impedindo que o navegador execute códigos maliciosos inseridos por usuários.</li>
+                <li><strong>Injeção de Código nas Telas (XSS):</strong> Mitigado na maior parte das exibições através do uso da tag <code>&lt;c:out value="..." /&gt;</code> da biblioteca JSTL, que transforma caracteres especiais como &lt; e &gt; em texto comum (evitando a execução de scripts no navegador). <em>Nota: Melhorias de proteção para o autocomplete integrado com a API do TMDB estão mapeadas como evolução futura.</em></li>
             </ul>
         </section>
 

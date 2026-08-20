@@ -244,4 +244,16 @@ class MySqlMediaItemDAOTest {
         assertEquals(1, results.size());
         assertEquals("Valid Movie", results.get(0).getTitle());
     }
+
+    @Test
+    @DisplayName("deve buscar por termo contendo caracteres curinga do LIKE de forma literal")
+    void testSearchWithWildcards() throws Exception {
+        dao.insert(new MediaItem("100% Real", MediaType.MOVIE));
+        dao.insert(new MediaItem("1000 items", MediaType.MOVIE));
+        
+        var results = dao.searchByTerm("100%");
+        
+        assertEquals(1, results.size());
+        assertEquals("100% Real", results.get(0).getTitle());
+    }
 }

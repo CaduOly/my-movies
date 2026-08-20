@@ -89,7 +89,7 @@ public class MySqlMediaItemDAO implements MediaItemDAO {
      * Retorna um item pelo id.
      *
      * @param id id do item
-     * @return item encontrado, ou null se o ID não existir no banco ou se o tipo de mídia (media_type) gravado for inválido
+     * @return o item, ou null se não existir ou se o media_type for inválido
      * @throws DAOException se ocorrer erro de persistência
      */
     @Override
@@ -189,7 +189,8 @@ public class MySqlMediaItemDAO implements MediaItemDAO {
         try (Connection conn = ConnectionFactory.get();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
-            String like = "%" + term.trim() + "%";
+            String escapedTerm = term.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_");
+            String like = "%" + escapedTerm.trim() + "%";
             stmt.setString(1, like);
             stmt.setString(2, like);
             stmt.setString(3, like);
@@ -214,7 +215,7 @@ public class MySqlMediaItemDAO implements MediaItemDAO {
      * Converte uma linha de ResultSet em MediaItem.
      * 
      * @param rs resultset posicionado na linha desejada
-     * @return o objeto MediaItem preenchido com os dados do banco de dados, ou null se o tipo de mídia (media_type) não for suportado pelo sistema (não estiver no enum MediaType)
+     * @return o item preenchido, ou null se o media_type gravado não existir no enum MediaType
      * @throws SQLException se houver falha ao ler dados
      */
     private MediaItem rowToMediaItem(ResultSet rs) throws SQLException {
