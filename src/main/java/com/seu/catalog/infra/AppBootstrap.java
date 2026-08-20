@@ -63,7 +63,7 @@ public class AppBootstrap implements ServletContextListener {
                 metadataProvider = new FakeMovieMetadataProvider();
             }
 
-            var service = new CatalogService(dao, metadataProvider);
+            var service = new CatalogService(dao);
             sce.getServletContext().setAttribute("catalogService", service);
             sce.getServletContext().setAttribute("metadataProvider", metadataProvider);
 

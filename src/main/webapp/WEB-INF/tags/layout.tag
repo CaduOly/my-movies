@@ -1,18 +1,15 @@
 <%@ tag language="java" pageEncoding="UTF-8" %>
-<%@ attribute name="pageTitle" required="true" type="java.lang.String" %>
+<%@ attribute name="pageTitle" required="false" type="java.lang.String" %>
+<%@ attribute name="pageTitleKey" required="false" type="java.lang.String" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 
-<c:if test="${not empty param.lang}">
-    <fmt:setLocale value="${param.lang}" scope="session" />
-</c:if>
-
 <!DOCTYPE html>
-<html lang="${not empty sessionScope['javax.servlet.jsp.jstl.fmt.locale.session'] ? sessionScope['javax.servlet.jsp.jstl.fmt.locale.session'] : 'pt-BR'}">
+<html lang="${not empty sessionScope.appLocale ? sessionScope.appLocale : 'pt-BR'}">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><fmt:message key="app.title" /> | <c:out value="${pageTitle}" /></title>
+    <title><fmt:message key="app.title" /> | <c:choose><c:when test="${not empty pageTitleKey}"><fmt:message key="${pageTitleKey}" /></c:when><c:otherwise><c:out value="${pageTitle}" /></c:otherwise></c:choose></title>
     <link rel="stylesheet" href="<c:url value='/css/style.css' />" />
 </head>
 <body>
@@ -25,11 +22,12 @@
                     <li><a href="<c:url value='/app/home' />" class="nav-link"><fmt:message key="app.home" /></a></li>
                     <li><a href="<c:url value='/app/list' />" class="nav-link"><fmt:message key="app.manage" /></a></li>
                     <li><a href="<c:url value='/app/new' />" class="nav-link"><fmt:message key="app.add" /></a></li>
+                    <li><a href="<c:url value='/app/about' />" class="nav-link"><fmt:message key="app.about" /></a></li>
                 </ul>
             </nav>
             <div style="margin-top: auto; padding: 20px 0; text-align: center;">
-                <a href="?lang=pt_BR" class="action-link" style="font-weight:bold;">PT</a> | 
-                <a href="?lang=en" class="action-link" style="font-weight:bold;">EN</a>
+                <a href="<c:url value='/lang?code=pt_BR' />" class="action-link" style="font-weight:bold;">PT</a> | 
+                <a href="<c:url value='/lang?code=en' />" class="action-link" style="font-weight:bold;">EN</a>
             </div>
         </aside>
 

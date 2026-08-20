@@ -3,8 +3,13 @@
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<t:layout pageTitle="${isEdit ? 'Editar Mídia' : 'Novo Item'}">
-    <h2><c:out value="${isEdit ? 'Editar Mídia' : 'Novo Item'}" /></h2>
+<t:layout pageTitleKey="${isEdit ? 'app.edit' : 'app.new'}">
+    <h2>
+        <c:choose>
+            <c:when test="${isEdit}"><fmt:message key="app.edit" /></c:when>
+            <c:otherwise><fmt:message key="app.new" /></c:otherwise>
+        </c:choose>
+    </h2>
 
     <form method="POST" action="<c:url value='${isEdit ? \"/app/update\" : \"/app/save\"}' />" class="item-form">
         
@@ -16,7 +21,7 @@
             <label for="title"><fmt:message key="item.title" /> *</label>
             <div style="display:flex; gap:10px;">
                 <input type="text" id="title" name="title" value="<c:out value='${item.title}' />" required maxlength="200" style="flex:1;" />
-                <button type="button" class="btn btn-secondary" onclick="searchTmdb()">Buscar TMDB</button>
+                <button type="button" class="btn btn-secondary" onclick="searchTmdb()"><fmt:message key="form.tmdb_search" /></button>
             </div>
             <!-- Dropdown de Sugestões -->
             <div id="tmdbDropdown" style="display:none; position:absolute; top:100%; left:0; width:calc(100% - 130px); background:#ffffff; border:1px solid #ccc; border-radius:4px; box-shadow:0 4px 12px rgba(0,0,0,0.3); z-index:9999; margin-top:4px; overflow:hidden;">
@@ -82,47 +87,74 @@ let currentTmdbData = [];
 function searchTmdb() {
     var title = document.getElementById("title").value;
     if (!title) {
-        alert("Digite um título primeiro!");
+        alert("<fmt:message key="form.tmdb_empty_title" />");
         return;
     }
     
     const dropdown = document.getElementById("tmdbDropdown");
     dropdown.style.display = "block";
-    dropdown.innerHTML = "<div style='padding:15px; color:var(--text-body);'>Buscando...</div>";
+    dropdown.innerHTML = "<div style='padding:15px; color:var(--text-body);'><fmt:message key="form.tmdb_searching" /></div>";
     
-    fetch("<c:url value='/app/tmdb-search' />?term=" + encodeURIComponent(title))
+    const lang = "${not empty sessionScope.appLocale ? sessionScope.appLocale : 'pt-BR'}";
+    fetch("<c:url value='/app/tmdb-search' />?term=" + encodeURIComponent(title) + "&lang=" + encodeURIComponent(lang))
         .then(response => response.json())
         .then(data => {
             if (!Array.isArray(data) || data.length === 0) {
-                dropdown.innerHTML = "<div style='padding:15px; color:var(--text-body);'>Nenhum resultado encontrado.</div>";
+                dropdown.innerHTML = "<div style='padding:15px; color:var(--text-body);'><fmt:message key="form.tmdb_no_results" /></div>";
                 setTimeout(() => { dropdown.style.display = "none"; }, 2500);
                 return;
             }
             
             currentTmdbData = data;
             
-            let html = "";
+            dropdown.innerHTML = "";
             for (let i = 0; i < data.length; i++) {
                 const item = data[i];
                 const posterSrc = item.posterUrl ? item.posterUrl : '';
-                const posterHtml = posterSrc ? '<img src="' + posterSrc + '" style="width:40px; height:60px; object-fit:cover; border-radius:4px;" />' : '<div style="width:40px; height:60px; background:#eee; border-radius:4px;"></div>';
                 const displayTitle = item.title || title;
                 const displayYear = item.releaseYear ? ' (' + item.releaseYear + ')' : "";
                 
-                html += 
-                    '<div onclick="acceptSuggestion(' + i + ')" style="display:flex; gap:12px; padding:10px; cursor:pointer; align-items:center; transition:background 0.2s; border-bottom:1px solid #eee;" onmouseover="this.style.background=\'#f0f0f0\'" onmouseout="this.style.background=\'transparent\'">' +
-                        posterHtml +
-                        '<div style="flex:1;">' +
-                            '<div style="font-weight:bold; color:#333; font-size:1rem;">' + displayTitle + displayYear + '</div>' +
-                            '<div style="font-size:0.85rem; color:#666; margin-top:4px;">Clique para preencher</div>' +
-                        '</div>' +
-                    '</div>';
+                const div = document.createElement("div");
+                div.onclick = function() { acceptSuggestion(i); };
+                div.style.cssText = "display:flex; gap:12px; padding:10px; cursor:pointer; align-items:center; transition:background 0.2s; border-bottom:1px solid #eee;";
+                div.onmouseover = function() { this.style.background = '#f0f0f0'; };
+                div.onmouseout = function() { this.style.background = 'transparent'; };
+                
+                if (posterSrc) {
+                    const img = document.createElement("img");
+                    img.src = posterSrc;
+                    img.style.cssText = "width:40px; height:60px; object-fit:cover; border-radius:4px;";
+                    div.appendChild(img);
+                } else {
+                    const placeholder = document.createElement("div");
+                    placeholder.style.cssText = "width:40px; height:60px; background:#eee; border-radius:4px;";
+                    div.appendChild(placeholder);
+                }
+                
+                const contentDiv = document.createElement("div");
+                contentDiv.style.flex = "1";
+                
+                const isSeries = item.mediaType === 'SERIES';
+                const typeLabel = isSeries ? ' [<fmt:message key="type.series" />]' : ' [<fmt:message key="type.movie" />]';
+                
+                const titleDiv = document.createElement("div");
+                titleDiv.style.cssText = "font-weight:bold; color:#333; font-size:1rem;";
+                titleDiv.textContent = displayTitle + displayYear + typeLabel;
+                
+                const helperDiv = document.createElement("div");
+                helperDiv.style.cssText = "font-size:0.85rem; color:#666; margin-top:4px;";
+                helperDiv.textContent = "<fmt:message key="form.tmdb_click_fill" />";
+                
+                contentDiv.appendChild(titleDiv);
+                contentDiv.appendChild(helperDiv);
+                
+                div.appendChild(contentDiv);
+                dropdown.appendChild(div);
             }
-            dropdown.innerHTML = html;
         })
         .catch(err => {
             console.error(err);
-            dropdown.innerHTML = "<div style='padding:15px; color:red;'>Erro ao consultar TMDB.</div>";
+            dropdown.innerHTML = "<div style='padding:15px; color:red;'><fmt:message key="form.tmdb_error" /></div>";
             setTimeout(() => { dropdown.style.display = "none"; }, 2500);
         });
 }
@@ -137,7 +169,11 @@ function acceptSuggestion(index) {
     if (selected.authorDirector) document.getElementById("authorDirector").value = selected.authorDirector;
     if (selected.synopsis) document.getElementById("synopsis").value = selected.synopsis;
     if (selected.posterUrl) document.getElementById("posterUrl").value = selected.posterUrl;
-    document.getElementById("mediaType").value = selected.mediaType || "MOVIE";
+    if (selected.mediaType) {
+        document.getElementById("mediaType").value = selected.mediaType;
+    } else {
+        document.getElementById("mediaType").value = "MOVIE";
+    }
     
     document.getElementById("tmdbDropdown").style.display = "none";
 }

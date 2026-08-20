@@ -5,10 +5,9 @@ import com.seu.catalog.exception.DAOException;
 import com.seu.catalog.exception.ServiceException;
 import com.seu.catalog.exception.ValidationException;
 import com.seu.catalog.model.MediaItem;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 
 /**
  * Serviço de negócio para gerenciar itens de mídia.
@@ -23,18 +22,15 @@ public class CatalogService {
     private static final Logger LOG = Logger.getLogger(CatalogService.class.getName());
     
     private final MediaItemDAO dao;
-    private final MovieMetadataProvider metadataProvider;
     private final MediaItemValidator validator;
 
     /**
      * Cria um serviço de catálogo.
      *
      * @param dao DAO de persistência (não nulo)
-     * @param metadataProvider provider de metadados externos (pode ser null para dev local)
      */
-    public CatalogService(MediaItemDAO dao, MovieMetadataProvider metadataProvider) {
+    public CatalogService(MediaItemDAO dao) {
         this.dao = dao;
-        this.metadataProvider = metadataProvider;
         this.validator = new MediaItemValidator();
     }
 
@@ -54,7 +50,7 @@ public class CatalogService {
         try {
             return dao.insert(item);
         } catch (DAOException e) {
-            LOG.severe("Erro ao inserir item: " + e.getMessage());
+            LOG.log(Level.SEVERE, "Erro ao inserir item: ", e);
             throw new ServiceException("Falha ao cadastrar item no banco de dados", e);
         }
     }
@@ -69,7 +65,7 @@ public class CatalogService {
         try {
             return dao.findAll();
         } catch (DAOException e) {
-            LOG.severe("Erro ao listar itens: " + e.getMessage());
+            LOG.log(Level.SEVERE, "Erro ao listar itens: ", e);
             throw new ServiceException("Falha ao listar itens", e);
         }
     }
@@ -85,7 +81,7 @@ public class CatalogService {
         try {
             return dao.findById(id);
         } catch (DAOException e) {
-            LOG.severe("Erro ao buscar item: " + e.getMessage());
+            LOG.log(Level.SEVERE, "Erro ao buscar item: ", e);
             throw new ServiceException("Falha ao buscar item", e);
         }
     }
@@ -118,7 +114,7 @@ public class CatalogService {
                 throw new ServiceException("Item com id " + item.getId() + " não pode ser atualizado");
             }
         } catch (DAOException e) {
-            LOG.severe("Erro ao atualizar item: " + e.getMessage());
+            LOG.log(Level.SEVERE, "Erro ao atualizar item: ", e);
             throw new ServiceException("Falha ao atualizar item no banco de dados", e);
         }
     }
@@ -143,7 +139,7 @@ public class CatalogService {
                 throw new ServiceException("Falha ao deletar item");
             }
         } catch (DAOException e) {
-            LOG.severe("Erro ao deletar item: " + e.getMessage());
+            LOG.log(Level.SEVERE, "Erro ao deletar item: ", e);
             throw new ServiceException("Falha ao deletar item do banco de dados", e);
         }
     }
@@ -163,7 +159,7 @@ public class CatalogService {
         try {
             return dao.searchByTerm(term);
         } catch (DAOException e) {
-            LOG.severe("Erro ao buscar por termo: " + e.getMessage());
+            LOG.log(Level.SEVERE, "Erro ao buscar por termo: ", e);
             throw new ServiceException("Falha ao buscar itens", e);
         }
     }

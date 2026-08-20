@@ -21,21 +21,18 @@ class CatalogServiceTest {
     @Mock
     private MediaItemDAO daoMock;
     
-    @Mock
-    private MovieMetadataProvider providerMock;
-    
     private CatalogService service;
 
     @BeforeEach
     void setUp() {
-        service = new CatalogService(daoMock, providerMock);
+        service = new CatalogService(daoMock);
     }
 
     @Test
     @DisplayName("deve criar item válido")
     void testCreateValidItem() throws Exception {
-        MediaItem item = new MediaItem("New Film", MediaType.MOVIE);
-        MediaItem saved = new MediaItem("New Film", MediaType.MOVIE);
+        MediaItem item = new MediaItem() {{ setTitle("New Film"); setMediaType(MediaType.MOVIE); }};
+        MediaItem saved = new MediaItem() {{ setTitle("New Film"); setMediaType(MediaType.MOVIE); }};
         saved.setId(1);
         
         when(daoMock.insert(any(MediaItem.class))).thenReturn(saved);
@@ -49,7 +46,7 @@ class CatalogServiceTest {
     @Test
     @DisplayName("deve rejeitar item inválido (title vazio)")
     void testCreateInvalidItem() throws Exception {
-        MediaItem item = new MediaItem("", MediaType.MOVIE);
+        MediaItem item = new MediaItem() {{ setTitle(""); setMediaType(MediaType.MOVIE); }};
         
         assertThrows(ValidationException.class, () -> service.createItem(item));
         verify(daoMock, never()).insert(any());
@@ -58,7 +55,7 @@ class CatalogServiceTest {
     @Test
     @DisplayName("deve converter DAOException em ServiceException")
     void testCreateThrowsDAOException() throws Exception {
-        MediaItem item = new MediaItem("Film", MediaType.MOVIE);
+        MediaItem item = new MediaItem() {{ setTitle("Film"); setMediaType(MediaType.MOVIE); }};
         
         when(daoMock.insert(any())).thenThrow(new DAOException("DB error"));
         
@@ -69,8 +66,8 @@ class CatalogServiceTest {
     @DisplayName("deve listar todos os itens")
     void testListAllItems() throws Exception {
         when(daoMock.findAll()).thenReturn(java.util.List.of(
-            new MediaItem("Film 1", MediaType.MOVIE),
-            new MediaItem("Film 2", MediaType.SERIES)
+            new MediaItem() {{ setTitle("Film 1"); setMediaType(MediaType.MOVIE); }},
+            new MediaItem() {{ setTitle("Film 2"); setMediaType(MediaType.SERIES); }}
         ));
         
         var items = service.listAllItems();
@@ -82,7 +79,7 @@ class CatalogServiceTest {
     @Test
     @DisplayName("deve buscar item por id")
     void testGetItemById() throws Exception {
-        MediaItem found = new MediaItem("Found", MediaType.MOVIE);
+        MediaItem found = new MediaItem() {{ setTitle("Found"); setMediaType(MediaType.MOVIE); }};
         when(daoMock.findById(1)).thenReturn(found);
         
         var result = service.getItemById(1);
@@ -94,10 +91,10 @@ class CatalogServiceTest {
     @Test
     @DisplayName("deve atualizar item válido")
     void testUpdateValidItem() throws Exception {
-        MediaItem existing = new MediaItem("Old", MediaType.MOVIE);
+        MediaItem existing = new MediaItem() {{ setTitle("Old"); setMediaType(MediaType.MOVIE); }};
         existing.setId(1);
         
-        MediaItem updated = new MediaItem("New Title", MediaType.MOVIE);
+        MediaItem updated = new MediaItem() {{ setTitle("New Title"); setMediaType(MediaType.MOVIE); }};
         updated.setId(1);
         
         when(daoMock.findById(1)).thenReturn(existing);
@@ -110,7 +107,7 @@ class CatalogServiceTest {
     @Test
     @DisplayName("deve rejeitar update de item inexistente")
     void testUpdateNotFound() throws Exception {
-        MediaItem item = new MediaItem("Title", MediaType.MOVIE);
+        MediaItem item = new MediaItem() {{ setTitle("Title"); setMediaType(MediaType.MOVIE); }};
         item.setId(9999);
         
         when(daoMock.findById(9999)).thenReturn(null);
@@ -121,7 +118,7 @@ class CatalogServiceTest {
     @Test
     @DisplayName("deve deletar item")
     void testDeleteItem() throws Exception {
-        MediaItem existing = new MediaItem("To Delete", MediaType.MOVIE);
+        MediaItem existing = new MediaItem() {{ setTitle("To Delete"); setMediaType(MediaType.MOVIE); }};
         existing.setId(1);
         
         when(daoMock.findById(1)).thenReturn(existing);
@@ -135,7 +132,7 @@ class CatalogServiceTest {
     @DisplayName("deve buscar itens por termo")
     void testSearchItems() throws Exception {
         when(daoMock.searchByTerm("matrix")).thenReturn(java.util.List.of(
-            new MediaItem("The Matrix", MediaType.MOVIE)
+            new MediaItem() {{ setTitle("The Matrix"); setMediaType(MediaType.MOVIE); }}
         ));
         
         var results = service.searchItems("matrix");

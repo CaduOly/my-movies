@@ -4,7 +4,7 @@ import java.util.Objects;
 
 /**
  * Representa um item de mídia no catálogo.
- * Um item pode ser um filme, série ou livro.
+ * Um item pode ser um filme ou série.
  */
 public class MediaItem {
     
@@ -16,20 +16,8 @@ public class MediaItem {
     private String synopsis;
     private MediaType mediaType;
     private String posterUrl;
-    private String externalId;
     private Integer rating;
     private String comment;
-
-    /**
-     * Cria um novo item de mídia com os atributos obrigatórios.
-     *
-     * @param title     o título do item; não pode ser nulo ou vazio
-     * @param mediaType o tipo de mídia; não pode ser nulo
-     */
-    public MediaItem(String title, MediaType mediaType) {
-        this.title = title;
-        this.mediaType = mediaType;
-    }
 
     /**
      * Construtor vazio padrão, útil para inicializações sem argumentos.
@@ -181,23 +169,6 @@ public class MediaItem {
         this.posterUrl = posterUrl;
     }
 
-    /**
-     * Obtém o identificador externo do item, se houver.
-     *
-     * @return o identificador externo
-     */
-    public String getExternalId() {
-        return externalId;
-    }
-
-    /**
-     * Define o identificador externo do item.
-     *
-     * @param externalId o identificador externo a ser definido
-     */
-    public void setExternalId(String externalId) {
-        this.externalId = externalId;
-    }
 
     /**
      * Obtém a nota de avaliação do item.

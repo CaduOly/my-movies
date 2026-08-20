@@ -1,4 +1,4 @@
-.PHONY: help build start down logs clean
+.PHONY: help build start down logs clean test restart
 
 help:
 	@echo "Comandos disponíveis:"
@@ -12,24 +12,21 @@ build:
 	mvn clean package -DskipTests
 
 test:
-	mvn test
+	mvn clean test
 
-start: build
+start:
 	@echo "Iniciando Docker Compose..."
 	docker compose up -d --build
 	@echo "Aguardando app estar pronto..."
-	@sleep 5
+	@until docker compose logs app 2>&1 | grep -q -i "Server startup\|Acesso:"; do sleep 1; done
 	@echo ""
 	@echo "✓ App pronto em http://localhost:8080"
-	@docker compose logs app | grep -i "acesso:"
+	@docker compose logs app | grep -i "acesso:" || true
 
 down:
 	docker compose down
 
-restart:
-	@echo "Reiniciando Docker Compose..."
-	make down
-	make start
+restart: down start
 
 logs:
 	docker compose logs -f app

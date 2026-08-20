@@ -11,9 +11,5 @@ public enum MediaType {
     /**
      * Tipo série.
      */
-    SERIES,
-    /**
-     * Tipo livro.
-     */
-    BOOK
+    SERIES
 }

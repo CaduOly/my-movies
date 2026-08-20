@@ -3,7 +3,7 @@
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<t:layout pageTitle="Biblioteca">
+<t:layout pageTitleKey="app.library">
     <h2><fmt:message key="app.list" /></h2>
 
     <!-- Busca -->
